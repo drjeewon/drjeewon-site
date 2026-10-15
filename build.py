@@ -315,6 +315,25 @@ def render(m):
         crumbs = '<nav class="crumbs" aria-label="위치">' + " › ".join(
             f'<a href="{u}">{esc(n)}</a>' for n, u in parts) + f' › <span>{esc(m.get("short", m["h1"]))}</span></nav>'
     og_img = D + m.get("image", "/static/og.jpg")
+    home = m["path"] == "/"
+    hero = ""
+    if home:
+        mm = re.search(r'<p class="answer">(.*?)</p>\s*', body, re.S)
+        lead = mm.group(1) if mm else ""
+        if mm:
+            body = body[:mm.start()] + body[mm.end():]
+        hero = f'''<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">인천 구월동 · 인천터미널역 2번 출구</p>
+    <h1>{esc(m["h1"])}</h1>
+    <p class="lead">{lead}</p>
+    <div class="cta">
+      {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
+      <a class="btn" href="#diseases">질환 정보 보기</a>
+    </div>
+  </div>
+  <img class="hero-img" src="{CFG.get("doctor_image", "/static/doctor-portrait.webp")}" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="900" height="1350">
+</section>'''
     return f'''<!doctype html>
 <html lang="ko">
 <head>
@@ -334,6 +353,8 @@ def render(m):
 <meta property="og:locale" content="ko_KR">
 {"".join(f'<meta name="{k}" content="{esc(v)}">' for k, v in CFG.get("verify", {}).items())}
 <link rel="alternate" type="application/rss+xml" title="{esc(CFG["site_name"])}" href="{D}/rss.xml">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/static/style.css">
 <script type="application/ld+json">
 {page_schema(m)}
@@ -341,21 +362,38 @@ def render(m):
 </head>
 <body>
 <header class="site">
-  <a class="brand" href="/">{esc(CFG["site_name"])}</a>
-  <nav>{nav}</nav>
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="{esc(CFG["site_name"])} 홈"><strong>{esc(CFG["doctor"])} 한의사</strong><span>{esc(CFG["doctor_title"])}</span></a>
+    <nav>{nav}</nav>
+    {f'<a class="nav-cta" href="{esc(C["booking"])}">예약하기</a>' if C.get("booking") else ""}
+  </div>
 </header>
-<main>
+<main{' class="home"' if home else ""}>
 {crumbs}
 <article>
-<h1>{esc(m["h1"])}</h1>
+{hero if home else f'<h1>{esc(m["h1"])}</h1>'}
 {body}
 </article>
 </main>
 <footer class="site">
-  <p><strong>{esc(CFG["site_name"])}</strong> · {esc(CFG["doctor_title"])} {esc(CFG["doctor"])}</p>
-  <p>{esc(C["region"])} {esc(C["locality"])} {esc(C["street"])} · <a href="tel:{C["tel"]}">{C["tel"]}</a> · <a href="{C["url"]}">{esc(C["name"])} 홈페이지</a></p>
-  <p>{" · ".join(f'<a href="{u}" rel="me">{n}</a>' for n, u in (("네이버 예약", C.get("booking")), ("네이버 플레이스", C.get("place")), ("블로그", C.get("blog")), ("인스타그램", C.get("instagram")), ("카카오톡 상담", C.get("kakao"))) if u)}</p>
-  <p class="small"><a href="/policy/">콘텐츠 작성 원칙</a> · 이 사이트의 글은 일반적인 건강 정보이며 진료를 대신하지 않습니다. 효과는 개인의 상태에 따라 다를 수 있습니다.</p>
+  <div class="wrap">
+    <div class="f-brand">
+      <p class="f-name">{esc(CFG["site_name"])}</p>
+      <p>{esc(CFG["doctor_title"])} {esc(CFG["doctor"])}</p>
+      <picture><source srcset="/static/hoo-logo-white.webp" media="(prefers-color-scheme: dark)"><img class="f-logo" src="/static/hoo-logo.webp" alt="{esc(C["name"])}" width="122" height="48" loading="lazy"></picture>
+    </div>
+    <div>
+      <p class="f-title">병원 정보</p>
+      <p>{esc(C["region"])} {esc(C["locality"])} {esc(C["street"])}</p>
+      <p>{esc(C["hours_text"])}</p>
+      <p><a href="tel:{C["tel"]}">{C["tel"]}</a> · <a href="{C["url"]}">{esc(C["name"])} 홈페이지</a></p>
+    </div>
+    <div>
+      <p class="f-title">바로가기</p>
+      <p class="f-links">{"".join(f'<a href="{u}" rel="me">{n}</a>' for n, u in (("네이버 예약", C.get("booking")), ("네이버 플레이스", C.get("place")), ("블로그", C.get("blog")), ("인스타그램", C.get("instagram")), ("카카오톡 상담", C.get("kakao"))) if u)}</p>
+    </div>
+  </div>
+  <p class="small wrap"><a href="/policy/">콘텐츠 작성 원칙</a> · 이 사이트의 글은 일반적인 건강 정보이며 진료를 대신하지 않습니다. 효과는 개인의 상태에 따라 다를 수 있습니다.</p>
 </footer>
 <script src="/static/site.js" defer></script>
 </body>

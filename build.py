@@ -193,19 +193,30 @@ def make_thumb(lines, out):
         best = min(range(1, len(words)), key=lambda k: abs(len(" ".join(words[:k])) - len(" ".join(words[k:])))) if len(words) > 1 else 1
         return [" ".join(words[:best]), " ".join(words[best:])]
 
-    key, rest = lines[0], " ".join(lines[1:])
-    kf, ks = fit(key, 250, 120)
-    sub_f = font(112, "Bold")
+    # 노란 핵심어: '/'로 줄을 나누거나, 한 줄로 크게 안 들어가면 2단으로 쌓는다
+    keys = [x.strip() for x in lines[0].split("/") if x.strip()]
+    rest = " ".join(lines[1:])
+    if len(keys) == 1 and d.textlength(keys[0], font=font(260)) > maxw and " " in keys[0]:
+        w = keys[0].split()
+        k = min(range(1, len(w)), key=lambda k: abs(len(" ".join(w[:k])) - len(" ".join(w[k:]))))
+        keys = [" ".join(w[:k]), " ".join(w[k:])]
+    ks = 290 if len(keys) > 1 else 300
+    while ks > 120 and max(d.textlength(x, font=font(ks)) for x in keys) > maxw:
+        ks -= 6
+    kf = font(ks)
+    sub_f = font(104, "Bold")
     sub = wrap(rest, sub_f) if rest else []
     while sub and max(d.textlength(x, font=sub_f) for x in sub) > maxw and sub_f.size > 64:
         sub_f = font(sub_f.size - 4, "Bold")
-    top_f = font(76, "Bold")
-    blocks = [(f"{CFG['doctor']} 한의사", top_f, "#fdf09a", 76 * 1.9)]
-    blocks.append((key, kf, "#fbe359", ks * 1.32))
-    blocks += [(x, sub_f, "#ffffff", sub_f.size * 1.38) for x in sub]
-    total = sum(h for *_, h in blocks)
+    top_f = font(84, "Bold")
+    blocks = [(CFG.get("thumb_label", "후한의원 인천"), top_f, "#fdf09a", 84 * 1.75)]
+    blocks += [(x, kf, "#fbe359", ks * 1.18) for x in keys]
+    blocks += [(x, sub_f, "#ffffff", sub_f.size * 1.36) for x in sub]
+    total = sum(h for *_, h in blocks) + (30 if sub else 0)
     y = (W - total) / 2
-    for text, f, color, h in blocks:
+    for n, (text, f, color, h) in enumerate(blocks):
+        if sub and n == len(blocks) - len(sub):
+            y += 30
         d.text((W / 2, y + h / 2), text, font=f, fill=color, anchor="mm")
         y += h
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -493,7 +504,7 @@ def render(m):
 
 ALL_COLUMNS = []
 CLINIC_TOPICS = ["여드름", "청소년 여드름", "등드름·몸여드름", "여드름 흉터", "여드름 자국", "기미", "흑자·잡티", "주근깨",
-                 "주사피부염·안면홍조", "지루성피부염", "한관종", "편평사마귀", "쥐젖·비립종·검버섯", "모공각화증", "한방 다이어트"]
+                 "주사피부염·안면홍조", "지루성피부염", "모낭염", "한포진", "한관종", "편평사마귀", "쥐젖·비립종·검버섯", "모공각화증", "한방 다이어트"]
 
 
 def main():
@@ -522,7 +533,9 @@ def main():
     by_date = lambda ms: sorted(ms, key=lambda m: m["published"], reverse=True)
     ALL_COLUMNS[:] = by_date([m for m in pages if m.get("column")])
     COLUMNS_HTML = column_list_html(ALL_COLUMNS)
-    LATEST_HTML = list_html(by_date([m for m in pages if m.get("medical")]), 8)
+    # 칼럼이 생기면 홈에는 최신 칼럼을 썸네일 카드로, 아직 없으면 최근 정리한 질환 글 목록으로
+    LATEST_HTML = (column_list_html(ALL_COLUMNS[:6]) if ALL_COLUMNS
+                   else list_html(by_date([m for m in pages if m.get("medical")]), 8))
     for m in pages:
         if m.get("thumb"):
             make_thumb(m["thumb"], DIST / m["image"].lstrip("/"))

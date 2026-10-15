@@ -1,0 +1,40 @@
+{
+  "domain": "https://drjeewon.github.io/drjeewon-site",
+  "preview": true,
+  "site_name": "김지원 한의사의 피부 이야기",
+  "site_desc": "후한의원 인천점 김지원 대표원장이 여드름, 흉터, 피부질환을 진료실에서 자주 받는 질문 중심으로 정리합니다.",
+  "doctor": "김지원",
+  "doctor_title": "후한의원 인천점 대표원장",
+  "clinic": {
+    "name": "후한의원 인천점",
+    "url": "https://ic.hooclinic.co.kr/",
+    "tel": "032-715-8073",
+    "street": "인하로489번길 4 맨하탄빌딩 3층",
+    "locality": "남동구",
+    "region": "인천광역시",
+    "postal": "",
+    "subway": "인천1호선 인천터미널역 2번 출구",
+    "kakao": "http://pf.kakao.com/_uHPiX/",
+    "hours_text": "월·화·목·금 11:00~20:30 (점심 14:00~15:30) · 토 10:00~15:00 · 수·일·공휴일 휴진",
+    "parking": "2시간 무료 주차",
+    "hours": [
+      {
+        "days": [
+          "Monday",
+          "Tuesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "11:00",
+        "closes": "20:30"
+      },
+      {
+        "days": [
+          "Saturday"
+        ],
+        "opens": "10:00",
+        "closes": "15:00"
+      }
+    ]
+  }
+}

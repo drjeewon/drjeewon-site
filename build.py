@@ -302,9 +302,9 @@ def page_schema(m):
 
 def faq_html(m):
     items = "".join(
-        f'<details class="faq"><summary>Q{i+1}. {esc(q)}</summary><p>{esc(a)}</p></details>'
-        for i, (q, a) in enumerate(m.get("faq", [])))
-    return f'<section id="faq"><h2>자주 묻는 질문</h2>{items}</section>'
+        f'<details class="faq"><summary><span class="q">Q.</span><span class="qt">{esc(q)}</span></summary><p>{esc(a)}</p></details>'
+        for q, a in m.get("faq", []))
+    return f'<section id="faq"><p class="eyebrow">FAQ</p><h2>자주 묻는 질문</h2>{items}</section>'
 
 
 def reviewer_html(m):
@@ -330,24 +330,58 @@ def events_html(m):
 
 
 def clinic_html(m):
+    rows = lambda rs: "".join(f'<div class="row"><span>{esc(k)}</span><b>{esc(v)}</b></div>' for k, v in rs)
     return f'''<section class="clinic" id="clinic">
+  <p class="eyebrow">CONTACT</p>
   <h2>{esc(m.get("clinic_heading", "진료 안내"))}</h2>
-  {f'<p>{esc(m["clinic_intro"])}</p>' if m.get("clinic_intro") else ""}
+  {f'<p class="lead">{esc(m["clinic_intro"])}</p>' if m.get("clinic_intro") else ""}
   {events_html(m)}
-  <dl>
-    <dt>병원</dt><dd><a href="{C["url"]}">{esc(C["name"])}</a></dd>
-    <dt>주소</dt><dd>{esc(C["region"])} {esc(C["locality"])} {esc(C["street"])} ({esc(C["subway"])})</dd>
-    <dt>전화</dt><dd><a href="tel:{C["tel"]}">{C["tel"]}</a></dd>
-    <dt>진료</dt><dd>{esc(C["hours_text"])}</dd>
-    <dt>주차</dt><dd>{esc(C["parking"])}</dd>
-  </dl>
+  <div class="info3">
+    <div>
+      <p class="k"><b>01</b> ADDRESS</p>
+      <p class="big">{esc(C.get("addr_main", C["street"]))}</p>
+      <p class="sub">{esc(C.get("addr_sub", C["subway"]))}</p>
+      <p class="muted">{esc(C.get("addr_note", ""))}</p>
+    </div>
+    <div>
+      <p class="k"><b>02</b> HOURS</p>
+      {rows(C.get("hours_rows", []))}
+      <span class="chip">{esc(C.get("closed_text", ""))}</span>
+    </div>
+    <div>
+      <p class="k"><b>03</b> PARKING</p>
+      {rows(C.get("parking_rows", []))}
+      <p class="muted">{esc(C.get("parking_note", ""))}</p>
+    </div>
+  </div>
   <div class="cta">
     {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
-    <a class="btn" href="tel:{C["tel"]}">전화 문의</a>
+    <a class="btn" href="tel:{C["tel"]}">전화 {C["tel"]}</a>
     <a class="btn" href="{C["kakao"]}">카카오톡 상담</a>
-    <a class="btn" href="{C["url"]}">홈페이지·예약</a>
+    <a class="btn" href="{C["url"]}">{esc(C["name"])} 홈페이지</a>
   </div>
 </section>'''
+
+
+ICONS = {
+    "tel": '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+    "naver": '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.6 12.8 8.1 2H2v20h6.4V11.2L15.9 22H22V2h-6.4z"/></svg>',
+    "kakao": '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.8 1.9 5.2 4.7 6.6l-1 3.6c-.1.4.3.7.6.5l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.9S17.5 3 12 3z"/></svg>',
+    "insta": '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
+}
+
+
+def dock_html(m):
+    """화면 아래 떠 있는 예약 바: 왼쪽은 돌아가는 안내 문구, 오른쪽은 전화·네이버 예약·카카오톡·인스타그램."""
+    msgs = CFG.get("events", {}).get(m.get("related") or m["path"]) or CFG.get("dock", [])
+    msgs = [[n, u] for n, u in msgs][:4] or [["네이버로 진료 예약하기", C.get("booking", C["url"])]]
+    first = msgs[0]
+    links = [("tel", f"tel:{C['tel']}", "전화 문의", "call"), ("naver", C.get("booking"), "네이버 예약", ""),
+             ("kakao", C.get("kakao"), "카카오톡 상담", ""), ("insta", C.get("instagram"), "인스타그램", "")]
+    btns = "".join(f'<a class="ic {cls}" href="{esc(u)}" aria-label="{lab}">{ICONS[k]}</a>' for k, u, lab, cls in links if u)
+    return (f'<div class="dock" data-msgs=\'{esc(json.dumps(msgs, ensure_ascii=False))}\'>'
+            f'<a class="dock-msg" href="{esc(first[1])}"><i></i><span>{esc(first[0])}</span><em>→</em></a>'
+            f'<span class="dock-sep"></span><div class="dock-btns">{btns}</div></div>')
 
 
 NAV = [("질환 정보", "/#diseases"), ("칼럼", "/column/"), ("원장 소개", "/doctor/"), ("오시는 길", "/clinic/")]
@@ -372,13 +406,15 @@ def related_cols_html(m):
     return f'<section class="related-cols"><h2>{esc(title)}</h2><ul class="list">{items}</ul></section>\n'
 
 
-def column_list_html(cols):
+def column_list_html(cols, search=False):
     if not cols:
         return list_html([])
     items = "".join(
         f'<a class="col-card" href="{m["path"]}"><img src="{m["image"]}" alt="" width="600" height="600" loading="lazy">'
         f'<strong>{esc(m["h1"])}</strong><span class="note">{esc(m["published"])}</span></a>' for m in cols)
-    return f'<div class="col-grid">{items}</div>'
+    box = (f'<div class="col-search"><p><b>원장 칼럼 전체</b> <span>{len(cols)}편</span></p>'
+           f'<input type="search" placeholder="칼럼 제목 검색" aria-label="칼럼 제목 검색"></div>') if search else ""
+    return f'{box}<div class="col-grid">{items}</div>'
 
 
 def static_selfcheck(body):
@@ -396,6 +432,14 @@ def static_selfcheck(body):
                             f'<p class="result" aria-live="polite">{text}</p>', 1)
         return mm.group(0)[:mm.start(2) - mm.start(0)] + rest
     return re.sub(r"""<div class="selfcheck" data-rules='(.*?)'>(.*?</div>)""", fill, body, flags=re.S)
+
+
+def duo_h1(t):
+    """'앞부분, 뒷부분' 제목을 얇은 첫 줄 + 굵은 둘째 줄로."""
+    if "," in t:
+        a, c = t.split(",", 1)
+        return f'<span>{esc(a.strip())},</span> {esc(c.strip())}'
+    return esc(t)
 
 
 def render(m):
@@ -424,7 +468,7 @@ def render(m):
         hero = f'''<section class="hero">
   <div class="hero-text">
     <p class="eyebrow">인천 구월동 · 인천터미널역 2번 출구</p>
-    <h1>{esc(m["h1"])}</h1>
+    <h1 class="duo">{duo_h1(m["h1"])}</h1>
     <p class="lead">{lead}</p>
     <div class="cta">
       {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
@@ -457,16 +501,19 @@ def render(m):
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+<meta name="theme-color" content="#f8f9fb">
 <script type="application/ld+json">
 {page_schema(m)}
 </script>
 </head>
 <body>
 <header class="site">
-  <div class="wrap">
-    <a class="brand" href="/" aria-label="{esc(CFG["site_name"])} 홈"><strong>{esc(CFG["doctor"])} 한의사</strong><span>{esc(CFG["doctor_title"])}</span></a>
+  <div class="bar">
+    <a class="brand" href="/" aria-label="{esc(CFG["site_name"])} 홈"><img src="/static/icon-192.png" alt="" width="40" height="40"><span><strong>{esc(CFG["doctor"])} 한의사</strong><small class="live" data-hours='{esc(json.dumps([[h["days"], h["opens"], h["closes"]] for h in C["hours"]]))}' data-lunch='{esc(json.dumps(C.get("lunch", [])))}'>{esc(CFG["doctor_title"])}</small></span></a>
     <nav>{nav}</nav>
-    {f'<a class="nav-cta" href="{esc(C["booking"])}">예약하기</a>' if C.get("booking") else ""}
   </div>
 </header>
 <main{' class="home"' if home else ""}>
@@ -477,9 +524,12 @@ def render(m):
 </article>
 </main>
 <footer class="site">
-  <div class="wrap">
+  <div class="wrap f-top">
+    <p class="f-name">{esc(CFG["site_name"])}</p>
+    <p class="f-tag"><span>이름부터 정확히 붙이고,</span> <b>다시 올라오는 이유까지 함께.</b></p>
+  </div>
+  <div class="wrap f-grid">
     <div class="f-brand">
-      <p class="f-name">{esc(CFG["site_name"])}</p>
       <p>{esc(CFG["doctor_title"])} {esc(CFG["doctor"])}</p>
       <picture><source srcset="/static/hoo-logo-white.webp" media="(prefers-color-scheme: dark)"><img class="f-logo" src="/static/hoo-logo.webp" alt="{esc(C["name"])}" width="122" height="48" loading="lazy"></picture>
     </div>
@@ -496,6 +546,7 @@ def render(m):
   </div>
   <p class="small wrap"><a href="/policy/">콘텐츠 작성 원칙</a> · 이 사이트의 글은 일반적인 건강 정보이며 진료를 대신하지 않습니다. 효과는 개인의 상태에 따라 다를 수 있습니다.</p>
 </footer>
+{dock_html(m)}
 <script src="/static/site.js" defer></script>
 </body>
 </html>
@@ -511,6 +562,7 @@ def main():
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(ROOT / "static", DIST / "static")
+    shutil.copy(ROOT / "static" / "favicon.ico", DIST / "favicon.ico")
     global DISEASES_HTML, COLUMNS_HTML, LATEST_HTML
     pages = [read_page(p) for p in sorted((ROOT / "pages").glob("*.html"))]
     pages += [read_column(p) for p in sorted((ROOT / "columns").glob("*.md")) if not p.name.startswith("_")]
@@ -532,7 +584,7 @@ def main():
                           + "".join(card(m) for m in treatments) + "</div>")
     by_date = lambda ms: sorted(ms, key=lambda m: m["published"], reverse=True)
     ALL_COLUMNS[:] = by_date([m for m in pages if m.get("column")])
-    COLUMNS_HTML = column_list_html(ALL_COLUMNS)
+    COLUMNS_HTML = column_list_html(ALL_COLUMNS, search=True)
     # 칼럼이 생기면 홈에는 최신 칼럼을 썸네일 카드로, 아직 없으면 최근 정리한 질환 글 목록으로
     LATEST_HTML = (column_list_html(ALL_COLUMNS[:6]) if ALL_COLUMNS
                    else list_html(by_date([m for m in pages if m.get("medical")]), 8))

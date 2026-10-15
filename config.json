@@ -39,7 +39,40 @@
     "booking": "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ko",
     "blog": "https://blog.naver.com/topearth7",
     "instagram": "https://www.instagram.com/incheonhoo",
-    "place": "https://naver.me/Fio7K6li"
+    "place": "https://naver.me/Fio7K6li",
+    "addr_main": "인천 남동구 인하로489번길 4",
+    "addr_sub": "맨하탄빌딩 3층 · 인천터미널역 2번 출구",
+    "addr_note": "롯데백화점 인천점 맞은편, 뉴코아아울렛 오른쪽 ABC마트 건물입니다.",
+    "hours_rows": [
+      [
+        "월·화·목·금",
+        "11:00 – 20:30"
+      ],
+      [
+        "— 점심시간",
+        "14:00 – 15:30"
+      ],
+      [
+        "토요일",
+        "10:00 – 15:00"
+      ]
+    ],
+    "lunch": [
+      "14:00",
+      "15:30"
+    ],
+    "closed_text": "정기휴무 수·일·공휴일",
+    "parking_rows": [
+      [
+        "건물 지하 기계식 주차장",
+        "2시간 지원"
+      ],
+      [
+        "문화예술회관 공영주차장",
+        "2시간 지원"
+      ]
+    ],
+    "parking_note": "기계식 주차장이라 큰 차는 들어가기 어려워요. 만차이거나 차가 크면 공영주차장을 이용해 주세요."
   },
   "doctor_image": "/static/doctor-portrait.webp",
   "doctor_career": [
@@ -167,5 +200,19 @@
       ]
     ]
   ],
-  "treatments": []
+  "treatments": [],
+  "dock": [
+    [
+      "네이버로 진료 예약하기",
+      "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ko"
+    ],
+    [
+      "여드름 압출 케어 · 1회 99,000원~",
+      "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9628"
+    ],
+    [
+      "카카오톡으로 상담 남기기",
+      "http://pf.kakao.com/_uHPiX/"
+    ]
+  ]
 }

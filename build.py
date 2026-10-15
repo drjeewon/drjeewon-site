@@ -374,7 +374,10 @@ ICONS = {
 def dock_html(m):
     """화면 아래 떠 있는 예약 바: 왼쪽은 돌아가는 안내 문구, 오른쪽은 전화·네이버 예약·카카오톡·인스타그램."""
     msgs = CFG.get("events", {}).get(m.get("related") or m["path"]) or CFG.get("dock", [])
-    msgs = [[n, u] for n, u in msgs][:4] or [["네이버로 진료 예약하기", C.get("booking", C["url"])]]
+    msgs = [[n, u] for n, u in msgs][:8]
+    book = ["네이버로 진료 예약하기", C.get("booking", C["url"])]
+    if book[1] not in [u for _, u in msgs]:
+        msgs.append(book)  # 이벤트가 있는 페이지도 예약 문구가 한 번은 돌게
     first = msgs[0]
     links = [("tel", f"tel:{C['tel']}", "전화 문의", "call"), ("naver", C.get("booking"), "네이버 예약", ""),
              ("kakao", C.get("kakao"), "카카오톡 상담", ""), ("insta", C.get("instagram"), "인스타그램", "")]

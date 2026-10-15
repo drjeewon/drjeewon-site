@@ -388,7 +388,7 @@ def dock_html(m):
 
 
 NAV = [("질환 정보", "/#diseases"), ("칼럼", "/column/"), ("원장 소개", "/doctor/"), ("오시는 길", "/clinic/")]
-DISEASES_HTML = COLUMNS_HTML = LATEST_HTML = ""
+DISEASES_HTML = COLUMNS_HTML = LATEST_HTML = PROGRAMS_HTML = ""
 
 
 def list_html(pages, limit=None):
@@ -451,7 +451,7 @@ def render(m):
     body = body.replace("{{REVIEWER}}", related_cols_html(m) + "{{REVIEWER}}", 1)
     body = body.replace("{{FAQ}}", faq_html(m)).replace("{{REVIEWER}}", reviewer_html(m))
     body = body.replace("{{CLINIC}}", clinic_html(m)).replace("{{DOMAIN}}", D)
-    body = body.replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)
+    body = body.replace("{{PROGRAMS}}", PROGRAMS_HTML).replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)
     body = body.replace("{{LATEST}}", LATEST_HTML)
     url = D + m["path"]
     nav = "".join(f'<a href="{u}">{esc(n)}</a>' for n, u in NAV)
@@ -470,7 +470,7 @@ def render(m):
             body = body[:mm.start()] + body[mm.end():]
         hero = f'''<section class="hero">
   <div class="hero-text">
-    <p class="eyebrow">인천 구월동 · 인천터미널역 2번 출구</p>
+    <p class="eyebrow">HOO CLINIC · INCHEON GUWOL</p>
     <h1 class="duo">{duo_h1(m["h1"])}</h1>
     <p class="lead">{lead}</p>
     <div class="cta">
@@ -503,11 +503,12 @@ def render(m):
 <link rel="alternate" type="application/rss+xml" title="{esc(CFG["site_name"])}" href="{D}/rss.xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/static/fonts/gowun-batang/gowun-batang.css">
 <link rel="stylesheet" href="/static/style.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
 <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-<meta name="theme-color" content="#f8f9fb">
+<meta name="theme-color" content="#f7f4f1">
 <script type="application/ld+json">
 {page_schema(m)}
 </script>
@@ -517,6 +518,7 @@ def render(m):
   <div class="bar">
     <a class="brand" href="/" aria-label="{esc(CFG["site_name"])} 홈"><img src="/static/icon-192.png" alt="" width="40" height="40"><span><strong>{esc(CFG["doctor"])} 한의사</strong><small class="live" data-hours='{esc(json.dumps([[h["days"], h["opens"], h["closes"]] for h in C["hours"]]))}' data-lunch='{esc(json.dumps(C.get("lunch", [])))}'>{esc(CFG["doctor_title"])}</small></span></a>
     <nav>{nav}</nav>
+    <a class="nav-cta" href="{esc(C.get("booking", C["url"]))}">상담 예약</a>
   </div>
 </header>
 <main{' class="home"' if home else ""}>
@@ -534,7 +536,7 @@ def render(m):
   <div class="wrap f-grid">
     <div class="f-brand">
       <p>{esc(CFG["doctor_title"])} {esc(CFG["doctor"])}</p>
-      <picture><source srcset="/static/hoo-logo-white.webp" media="(prefers-color-scheme: dark)"><img class="f-logo" src="/static/hoo-logo.webp" alt="{esc(C["name"])}" width="122" height="48" loading="lazy"></picture>
+      <img class="f-logo" src="/static/hoo-logo-white.webp" alt="{esc(C["name"])}" width="122" height="48" loading="lazy">
     </div>
     <div>
       <p class="f-title">병원 정보</p>
@@ -566,7 +568,7 @@ def main():
         shutil.rmtree(DIST)
     shutil.copytree(ROOT / "static", DIST / "static")
     shutil.copy(ROOT / "static" / "favicon.ico", DIST / "favicon.ico")
-    global DISEASES_HTML, COLUMNS_HTML, LATEST_HTML
+    global DISEASES_HTML, COLUMNS_HTML, LATEST_HTML, PROGRAMS_HTML
     pages = [read_page(p) for p in sorted((ROOT / "pages").glob("*.html"))]
     pages += [read_column(p) for p in sorted((ROOT / "columns").glob("*.md")) if not p.name.startswith("_")]
     carded = {m["path"]: m for m in sorted((m for m in pages if m.get("card")), key=lambda m: m.get("order", 99))}
@@ -582,6 +584,12 @@ def main():
     DISEASES_HTML = "".join(
         f'<h3 class="group" id="{gid}">{esc(name)}</h3><div class="cards">{"".join(card(m) for m in ms)}</div>'
         for gid, name, ms in groups if ms)
+    info = CFG.get("group_info", {})
+    PROGRAMS_HTML = '<div class="programs-grid">' + "".join(
+        f'<div class="pg" id="{gid}"><p class="pg-en">{esc(info.get(gid, ["", ""])[0])}</p><h3>{esc(name)}</h3>'
+        f'<p class="pg-d">{esc(info.get(gid, ["", ""])[1])}</p>'
+        f'<ul>{"".join(f"<li><a href=\"{m["path"]}\">{esc(m["short"])}</a></li>" for m in ms)}</ul></div>'
+        for gid, name, ms in groups if ms) + '</div>'
     if treatments:
         DISEASES_HTML += ('<h2 id="treatments">치료 방법 안내</h2><div class="cards">'
                           + "".join(card(m) for m in treatments) + "</div>")

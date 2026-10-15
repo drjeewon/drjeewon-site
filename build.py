@@ -280,7 +280,7 @@ def list_html(pages, limit=None):
     items = "".join(
         f'<li><a href="{m["path"]}">{esc(m["h1"])}</a> <span class="note">{esc(m["published"])}</span></li>'
         for m in pages[:limit])
-    return f'<ul class="list">{items}</ul>' if items else '<p class="note">곧 첫 글이 올라옵니다.</p>'
+    return f'<ul class="list">{items}</ul>' if items else '<p class="note">첫 칼럼을 준비하고 있습니다. 그동안 아래 질환별 글을 먼저 읽어 보세요.</p>'
 
 
 def static_selfcheck(body):

@@ -117,6 +117,16 @@ details.faq p{margin:.7em 0 0;color:var(--text)}
 .event span{flex:none;font-size:13px;font-weight:600;color:var(--accent)}
 .event:hover span{text-decoration:underline}
 
+/* 칼럼 썸네일 */
+img.thumb{display:block;width:100%;max-width:520px;height:auto;margin:0 auto 24px;border-radius:var(--radius)}
+.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.col-card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--text)}
+.col-card img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius-sm);background:var(--surface)}
+.col-card strong{font-size:1rem;line-height:1.5;letter-spacing:-.02em}
+.col-card:hover strong{color:var(--accent)}
+
+@media (max-width:520px){.col-grid{grid-template-columns:1fr 1fr;gap:14px}.col-card strong{font-size:.92rem}}
+
 /* 원장 사진 */
 img.portrait{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 24px;border-radius:var(--radius)}
 

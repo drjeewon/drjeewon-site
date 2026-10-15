@@ -144,9 +144,59 @@ def read_column(p):
         "crumbs": [["칼럼", "/column/"]],
         "related": get("관련", "related"),
         "faq": faq,
-        "body": md_to_html("\n".join(rest)) + ("\n{{FAQ}}" if faq else "") + "\n{{REVIEWER}}\n{{CLINIC}}",
+        "thumb": thumb_lines(get("썸네일", "thumbnail"), title),
+        "image": f"/column/{slug}/thumb.jpg",
+        "body": put_thumb(md_to_html("\n".join(rest)),
+                          f'<img class="thumb" src="/column/{slug}/thumb.jpg" alt="{esc(title)}" width="1200" height="1200">') + ("\n{{FAQ}}" if faq else "") + "\n{{REVIEWER}}\n{{CLINIC}}",
     }
     return meta
+
+
+def put_thumb(body, img):
+    """썸네일은 첫 답변 박스 바로 아래에: AI와 독자가 먼저 읽는 결론을 그림이 밀어내지 않게."""
+    mm = re.search(r'<p class="answer">.*?</p>', body, re.S)
+    return body[:mm.end()] + "\n" + img + body[mm.end():] if mm else img + "\n" + body
+
+
+def thumb_lines(spec, title):
+    """머리말 '썸네일: 강조할 말 | 질문 줄'. 없으면 제목을 첫 쉼표에서 나눠 씀."""
+    if spec:
+        return [x.strip() for x in spec.split("|") if x.strip()]
+    t = title.rstrip()
+    if "," in t:
+        a, c = t.split(",", 1)
+        return [a.strip(), c.strip()]
+    words = t.split()
+    half = max(1, len(words) // 2)
+    return [" ".join(words[:half]), " ".join(words[half:])]
+
+
+def make_thumb(lines, out):
+    """칼럼 썸네일 1200x1200: 병원 블로그와 같은 메모지 배경, 첫 줄은 형광펜 강조, 나머지는 질문."""
+    from PIL import Image, ImageDraw, ImageFont
+    fonts = ROOT / "assets" / "fonts"
+    im = Image.open(ROOT / "assets" / "thumb-bg.jpg").convert("RGB")
+    d = ImageDraw.Draw(im)
+    cx, maxw = 592, 840
+    size = 150
+    while size > 70:
+        f = ImageFont.truetype(str(fonts / "Pretendard-Bold.otf"), size)
+        if max(d.textlength(x, font=f) for x in lines) <= maxw:
+            break
+        size -= 4
+    gap = int(size * 1.32)
+    top = 600 - gap * len(lines) // 2
+    for i, x in enumerate(lines):
+        y = top + i * gap + gap // 2
+        w = d.textlength(x, font=f)
+        if i == 0:
+            d.rectangle([cx - w / 2 - 14, y + size * 0.02, cx + w / 2 + 14, y + size * 0.42], fill="#e4d9cf")
+        d.text((cx, y), x, font=f, fill="#7d6855" if i == 0 else "#2f2f2f", anchor="mm")
+    small = ImageFont.truetype(str(fonts / "Pretendard-SemiBold.otf"), 34)
+    d.text((cx, 300), f"{CFG['doctor']} 한의사의 피부 이야기", font=small, fill="#9a8775", anchor="mm")
+    d.text((cx, 930), "drjeewon.kr", font=small, fill="#b3a392", anchor="mm")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    im.save(out, quality=86, optimize=True)
 
 
 def clinic_schema():
@@ -205,6 +255,7 @@ def page_schema(m):
          "description": m["description"], "inLanguage": "ko-KR",
          "isPartOf": {"@id": f"{D}/#website"},
          "datePublished": m["published"], "dateModified": m["updated"],
+         **({"primaryImageOfPage": D + m["image"]} if m.get("thumb") else {}),
          **({"reviewedBy": {"@id": f"{D}/#doctor"}, "lastReviewed": m["updated"],
              "author": {"@id": f"{D}/#doctor"}} if m.get("medical") else {})},
     ]
@@ -281,6 +332,15 @@ def list_html(pages, limit=None):
         f'<li><a href="{m["path"]}">{esc(m["h1"])}</a> <span class="note">{esc(m["published"])}</span></li>'
         for m in pages[:limit])
     return f'<ul class="list">{items}</ul>' if items else '<p class="note">첫 칼럼을 준비하고 있습니다. 그동안 아래 질환별 글을 먼저 읽어 보세요.</p>'
+
+
+def column_list_html(cols):
+    if not cols:
+        return list_html([])
+    items = "".join(
+        f'<a class="col-card" href="{m["path"]}"><img src="{m["image"]}" alt="" width="600" height="600" loading="lazy">'
+        f'<strong>{esc(m["h1"])}</strong><span class="note">{esc(m["published"])}</span></a>' for m in cols)
+    return f'<div class="col-grid">{items}</div>'
 
 
 def static_selfcheck(body):
@@ -427,8 +487,11 @@ def main():
         DISEASES_HTML += ('<h2 id="treatments">치료 방법 안내</h2><div class="cards">'
                           + "".join(card(m) for m in treatments) + "</div>")
     by_date = lambda ms: sorted(ms, key=lambda m: m["published"], reverse=True)
-    COLUMNS_HTML = list_html(by_date([m for m in pages if m.get("column")]))
+    COLUMNS_HTML = column_list_html(by_date([m for m in pages if m.get("column")]))
     LATEST_HTML = list_html(by_date([m for m in pages if m.get("medical")]), 8)
+    for m in pages:
+        if m.get("thumb"):
+            make_thumb(m["thumb"], DIST / m["image"].lstrip("/"))
     for m in pages:
         out = DIST / m["path"].strip("/") / "index.html" if m["path"] != "/" else DIST / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)

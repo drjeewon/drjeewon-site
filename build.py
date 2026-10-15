@@ -48,6 +48,106 @@ def read_page(p):
     return meta
 
 
+def inline_md(t):
+    t = esc(t)
+    t = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", r'<img src="\2" alt="\1" loading="lazy">', t)
+    t = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", r'<a href="\2">\1</a>', t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    return t
+
+
+def md_to_html(src):
+    """칼럼용 아주 단순한 마크다운: ## ### 문단, - 목록, 1. 목록, > 인용, **굵게**, [링크](주소), ![사진](주소)"""
+    out, para, lst = [], [], None
+
+    def flush():
+        nonlocal para, lst
+        if para:
+            out.append("<p>" + "<br>".join(inline_md(x) for x in para) + "</p>")
+            para = []
+        if lst:
+            tag, items = lst
+            out.append(f"<{tag}>" + "".join(f"<li>{inline_md(i)}</li>" for i in items) + f"</{tag}>")
+            lst = None
+
+    for line in src.splitlines():
+        t = line.strip()
+        if not t:
+            flush()
+            continue
+        m = re.match(r"(#{2,3})\s+(.*)", t)
+        if m:
+            flush()
+            n = len(m.group(1))
+            out.append(f"<h{n}>{inline_md(m.group(2))}</h{n}>")
+            continue
+        m = re.match(r"(?:[-*]|(\d+)\.)\s+(.*)", t)
+        if m:
+            if para:
+                flush()
+            tag = "ol" if m.group(1) else "ul"
+            if not lst or lst[0] != tag:
+                flush()
+                lst = (tag, [])
+            lst[1].append(m.group(2))
+            continue
+        if t.startswith(">"):
+            flush()
+            out.append(f'<p class="answer">{inline_md(t.lstrip("> "))}</p>')
+            continue
+        if lst:
+            flush()
+        para.append(t)
+    flush()
+    return "\n".join(out)
+
+
+def read_column(p):
+    """columns/*.md: 맨 위 --- 사이에 '키: 값' 줄 (제목, 설명, 주소, 날짜), 아래 본문.
+    본문에서 'Q. 질문' 다음 줄 'A. 답'은 자주 묻는 질문으로 모아 FAQ 스키마에 들어감."""
+    src = p.read_text(encoding="utf-8")
+    m = re.match(r"---\s*\n(.*?)\n---\s*\n", src, re.S)
+    if not m:
+        raise SystemExit(f"{p.name}: 맨 위 --- 머리말 없음")
+    head = {}
+    for line in m.group(1).splitlines():
+        if ":" in line:
+            k, v = line.split(":", 1)
+            head[k.strip()] = v.strip()
+    body = src[m.end():]
+    faq, rest, lines, i = [], [], body.splitlines(), 0
+    while i < len(lines):
+        q = re.match(r"\s*Q\d*[.:]\s*(.+)", lines[i])
+        a = re.match(r"\s*A\d*[.:]\s*(.+)", lines[i + 1]) if q and i + 1 < len(lines) else None
+        if q and a:
+            faq.append([q.group(1).strip(), a.group(1).strip()])
+            i += 2
+            continue
+        rest.append(lines[i])
+        i += 1
+    if faq:  # FAQ 섹션 제목은 {{FAQ}}가 넣으므로 본문의 같은 제목은 뺌
+        rest = [x for x in rest if not re.match(r"\s*#{2,3}\s*자주\s*묻는\s*질문", x)]
+    get = lambda *ks: next((head[k] for k in ks if head.get(k)), "")
+    title = get("제목", "title")
+    slug = get("주소", "slug") or p.stem
+    when = get("날짜", "date") or date.today().isoformat()
+    meta = {
+        "path": f"/column/{slug}/",
+        "medical": True,
+        "column": True,
+        "title": f"{title} | {CFG['doctor']} 한의사",
+        "h1": title,
+        "short": title,
+        "description": get("설명", "description"),
+        "published": when,
+        "updated": get("수정", "updated") or when,
+        "crumbs": [["칼럼", "/column/"]],
+        "faq": faq,
+        "body": md_to_html("\n".join(rest)) + ("\n{{FAQ}}" if faq else "") + "\n{{REVIEWER}}\n{{CLINIC}}",
+    }
+    return meta
+
+
 def clinic_schema():
     return {
         "@type": ["MedicalClinic", "LocalBusiness"],
@@ -150,13 +250,23 @@ def clinic_html(m):
 </section>'''
 
 
-NAV = [("성인 여드름", "/acne/"), ("원장 소개", "/doctor/"), ("오시는 길", "/clinic/")]
+NAV = [("질환 정보", "/#diseases"), ("칼럼", "/column/"), ("원장 소개", "/doctor/"), ("오시는 길", "/clinic/")]
+DISEASES_HTML = COLUMNS_HTML = LATEST_HTML = ""
+
+
+def list_html(pages, limit=None):
+    items = "".join(
+        f'<li><a href="{m["path"]}">{esc(m["h1"])}</a> <span class="note">{esc(m["published"])}</span></li>'
+        for m in pages[:limit])
+    return f'<ul class="list">{items}</ul>' if items else '<p class="note">곧 첫 글이 올라옵니다.</p>'
 
 
 def render(m):
     body = m["body"]
     body = body.replace("{{FAQ}}", faq_html(m)).replace("{{REVIEWER}}", reviewer_html(m))
     body = body.replace("{{CLINIC}}", clinic_html(m)).replace("{{DOMAIN}}", D)
+    body = body.replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)
+    body = body.replace("{{LATEST}}", LATEST_HTML)
     url = D + m["path"]
     nav = "".join(f'<a href="{u}">{esc(n)}</a>' for n, u in NAV)
     crumbs = ""
@@ -216,7 +326,16 @@ def main():
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(ROOT / "static", DIST / "static")
+    global DISEASES_HTML, COLUMNS_HTML, LATEST_HTML
     pages = [read_page(p) for p in sorted((ROOT / "pages").glob("*.html"))]
+    pages += [read_column(p) for p in sorted((ROOT / "columns").glob("*.md")) if not p.name.startswith("_")]
+    diseases = sorted((m for m in pages if m.get("card")), key=lambda m: m.get("order", 99))
+    DISEASES_HTML = '<div class="cards">' + "".join(
+        f'<div class="card"><h3><a href="{m["path"]}">{esc(m["short"])}</a></h3><p>{esc(m["card"])}</p></div>'
+        for m in diseases) + "</div>"
+    by_date = lambda ms: sorted(ms, key=lambda m: m["published"], reverse=True)
+    COLUMNS_HTML = list_html(by_date([m for m in pages if m.get("column")]))
+    LATEST_HTML = list_html(by_date([m for m in pages if m.get("medical")]), 8)
     for m in pages:
         out = DIST / m["path"].strip("/") / "index.html" if m["path"] != "/" else DIST / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)

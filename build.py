@@ -245,7 +245,7 @@ def clinic_schema():
         "areaServed": [{"@type": "City", "name": "인천광역시"}, {"@type": "Place", "name": "인천 남동구 구월동"}],
         "knowsAbout": CLINIC_TOPICS,
         "isAcceptingNewPatients": True,
-        "image": D + C.get("image", "/static/og.jpg"),
+        "image": D + C.get("image", "/static/og-v2.jpg"),
         "priceRange": C.get("price_range", "₩₩"),
         **({"hasMap": C["place"]} if C.get("place") else {}),
         **({"potentialAction": {"@type": "ReserveAction", "target": C["booking"]}} if C.get("booking") else {}),
@@ -460,7 +460,7 @@ def render(m):
         parts = [("홈", "/")] + m.get("crumbs", [])
         crumbs = '<nav class="crumbs" aria-label="위치">' + " › ".join(
             f'<a href="{u}">{esc(n)}</a>' for n, u in parts) + f' › <span>{esc(m.get("short", m["h1"]))}</span></nav>'
-    og_img = D + m.get("image", "/static/og.jpg")
+    og_img = D + m.get("image", "/static/og-v2.jpg")
     home = m["path"] == "/"
     hero = ""
     if home:

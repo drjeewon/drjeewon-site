@@ -168,7 +168,7 @@ def clinic_schema():
         ],
         "medicalSpecialty": "Dermatology",
         **({"potentialAction": {"@type": "ReserveAction", "target": C["booking"]}} if C.get("booking") else {}),
-        "sameAs": [C["url"], C["kakao"]],
+        "sameAs": [u for u in (C["url"], C.get("place"), C.get("blog"), C.get("instagram"), C["kakao"]) if u],
     }
 
 
@@ -320,6 +320,7 @@ def render(m):
 <footer class="site">
   <p><strong>{esc(CFG["site_name"])}</strong> · {esc(CFG["doctor_title"])} {esc(CFG["doctor"])}</p>
   <p>{esc(C["region"])} {esc(C["locality"])} {esc(C["street"])} · <a href="tel:{C["tel"]}">{C["tel"]}</a> · <a href="{C["url"]}">{esc(C["name"])} 홈페이지</a></p>
+  <p>{" · ".join(f'<a href="{u}" rel="me">{n}</a>' for n, u in (("네이버 예약", C.get("booking")), ("네이버 플레이스", C.get("place")), ("블로그", C.get("blog")), ("인스타그램", C.get("instagram")), ("카카오톡 상담", C.get("kakao"))) if u)}</p>
   <p class="small">이 사이트의 글은 일반적인 건강 정보이며 진료를 대신하지 않습니다. 효과는 개인의 상태에 따라 다를 수 있습니다.</p>
 </footer>
 <script src="/static/site.js" defer></script>

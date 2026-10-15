@@ -36,7 +36,10 @@
         "closes": "15:00"
       }
     ],
-    "booking": "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ko"
+    "booking": "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ko",
+    "blog": "https://blog.naver.com/topearth7",
+    "instagram": "https://www.instagram.com/incheonhoo",
+    "place": "https://naver.me/Fio7K6li"
   },
   "doctor_image": "/static/doctor-portrait.webp",
   "doctor_career": [

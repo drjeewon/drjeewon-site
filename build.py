@@ -346,6 +346,19 @@ def main():
         f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n',
         encoding="utf-8")
     rules = "Disallow: /" if PREVIEW else "Allow: /"
+    # AI 검색 크롤러도 명시적으로 허용 (ChatGPT·Claude·Perplexity·Gemini·네이버)
+    ai_bots = ["OAI-SearchBot", "GPTBot", "ClaudeBot", "Claude-SearchBot", "PerplexityBot", "Google-Extended", "Yeti"]
+    if not PREVIEW:
+        rules += "\n\n" + "\n\n".join(f"User-agent: {b}\nAllow: /" for b in ai_bots)
+    lines = [f"# {CFG['site_name']}", "", f"> {CFG['site_desc']}", "",
+             f"- 작성·감수: {CFG['doctor']} ({CFG['doctor_title']})",
+             f"- 병원: {C['name']}, {C['region']} {C['locality']} {C['street']}, {C['tel']}, {C['url']}",
+             f"- 진료시간: {C['hours_text']}", "", "## 질환 정보", ""]
+    lines += [f"- [{m['short']}]({D}{m['path']}): {m.get('card', m['description'])}" for m in diseases]
+    cols = [m for m in pages if m.get("column")]
+    if cols:
+        lines += ["", "## 칼럼", ""] + [f"- [{m['h1']}]({D}{m['path']})" for m in cols]
+    (DIST / "llms.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (DIST / "robots.txt").write_text(f"User-agent: *\n{rules}\n\nSitemap: {D}/sitemap.xml\n", encoding="utf-8")
     items = ""
     for m in sorted((m for m in pages if m.get("medical")), key=lambda m: m["published"], reverse=True):

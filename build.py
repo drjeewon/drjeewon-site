@@ -329,7 +329,9 @@ def render(m):
     <p class="lead">{lead}</p>
     <div class="cta">
       {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
-      <a class="btn" href="#diseases">질환 정보 보기</a>
+      <a class="btn" href="tel:{C["tel"]}">전화 문의</a>
+      <a class="btn" href="{C["kakao"]}">카카오톡 상담</a>
+      <a class="btn" href="{C["url"]}">홈페이지</a>
     </div>
   </div>
   <img class="hero-img" src="{CFG.get("doctor_image", "/static/doctor-portrait.webp")}" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="900" height="1350">

@@ -57,3 +57,7 @@ ul.list{padding-left:1.1em}
 ul.list li{margin:.35em 0}
 article img{max-width:100%;height:auto;border-radius:8px}
 img.portrait{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 20px;border-radius:var(--radius)}
+.refs{margin-top:32px;font-size:14px;color:var(--muted)}
+.refs h2{font-size:1.05rem}
+.refs ol{padding-left:1.3em}
+.refs li{margin:.3em 0;word-break:break-word}

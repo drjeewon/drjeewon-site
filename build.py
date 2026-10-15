@@ -370,10 +370,22 @@ def main():
     global DISEASES_HTML, COLUMNS_HTML, LATEST_HTML
     pages = [read_page(p) for p in sorted((ROOT / "pages").glob("*.html"))]
     pages += [read_column(p) for p in sorted((ROOT / "columns").glob("*.md")) if not p.name.startswith("_")]
-    diseases = sorted((m for m in pages if m.get("card")), key=lambda m: m.get("order", 99))
-    DISEASES_HTML = '<div class="cards">' + "".join(
-        f'<div class="card"><h3><a href="{m["path"]}">{esc(m["short"])}</a></h3><p>{esc(m["card"])}</p></div>'
-        for m in diseases) + "</div>"
+    carded = {m["path"]: m for m in sorted((m for m in pages if m.get("card")), key=lambda m: m.get("order", 99))}
+    treat_paths = [u for u in CFG.get("treatments", []) if u in carded]
+    groups = [(gid, name, [carded[u] for u in paths if u in carded]) for gid, name, paths in CFG.get("groups", [])]
+    grouped = {m["path"] for _, _, ms in groups for m in ms} | set(treat_paths)
+    rest = [m for u, m in carded.items() if u not in grouped]
+    if rest:
+        groups.append(("etc", "기타", rest))
+    diseases = [m for _, _, ms in groups for m in ms]
+    treatments = [carded[u] for u in treat_paths]
+    card = lambda m: f'<div class="card"><h4><a href="{m["path"]}">{esc(m["short"])}</a></h4><p>{esc(m["card"])}</p></div>'
+    DISEASES_HTML = "".join(
+        f'<h3 class="group" id="{gid}">{esc(name)}</h3><div class="cards">{"".join(card(m) for m in ms)}</div>'
+        for gid, name, ms in groups if ms)
+    if treatments:
+        DISEASES_HTML += ('<h2 id="treatments">치료 방법 안내</h2><div class="cards">'
+                          + "".join(card(m) for m in treatments) + "</div>")
     by_date = lambda ms: sorted(ms, key=lambda m: m["published"], reverse=True)
     COLUMNS_HTML = list_html(by_date([m for m in pages if m.get("column")]))
     LATEST_HTML = list_html(by_date([m for m in pages if m.get("medical")]), 8)
@@ -395,7 +407,11 @@ def main():
              f"- 작성·감수: {CFG['doctor']} ({CFG['doctor_title']})",
              f"- 병원: {C['name']}, {C['region']} {C['locality']} {C['street']}, {C['tel']}, {C['url']}",
              f"- 진료시간: {C['hours_text']}", "", "## 질환 정보", ""]
-    lines += [f"- [{m['short']}]({D}{m['path']}): {m.get('card', m['description'])}" for m in diseases]
+    for _, name, ms in groups:
+        if ms:
+            lines += ["", f"### {name}", ""] + [f"- [{m['short']}]({D}{m['path']}): {m.get('card', m['description'])}" for m in ms]
+    if treatments:
+        lines += ["", "## 치료 방법 안내", ""] + [f"- [{m['short']}]({D}{m['path']}): {m.get('card', m['description'])}" for m in treatments]
     cols = [m for m in pages if m.get("column")]
     if cols:
         lines += ["", "## 칼럼", ""] + [f"- [{m['h1']}]({D}{m['path']})" for m in cols]

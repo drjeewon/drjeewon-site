@@ -66,3 +66,5 @@ img.portrait{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 
 .event{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);text-decoration:none;font-weight:600}
 .event span{flex:none;font-size:13px;font-weight:400;color:var(--accent)}
 .event:hover{border-color:var(--accent)}
+h3.group{margin:28px 0 10px;font-size:1.1rem}
+.card h4{margin:0 0 6px;font-size:1.05rem}

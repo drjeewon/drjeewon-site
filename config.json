@@ -110,5 +110,62 @@
         "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9314"
       ]
     ]
-  }
+  },
+  "groups": [
+    [
+      "acne",
+      "여드름",
+      [
+        "/acne/",
+        "/acne/teen/",
+        "/acne/body/",
+        "/acne/look-alikes/"
+      ]
+    ],
+    [
+      "scar",
+      "여드름 흉터·자국",
+      [
+        "/acne-scar/",
+        "/acne-mark/"
+      ]
+    ],
+    [
+      "pigment",
+      "기미·잡티 색소 질환",
+      [
+        "/melasma/",
+        "/lentigo/",
+        "/freckles/"
+      ]
+    ],
+    [
+      "redness",
+      "붉은기·염증성 피부",
+      [
+        "/rosacea/",
+        "/seborrheic-dermatitis/"
+      ]
+    ],
+    [
+      "bumps",
+      "피부 돌기·오돌토돌한 피부",
+      [
+        "/syringoma/",
+        "/flat-wart/",
+        "/skin-growths/",
+        "/keratosis-pilaris/"
+      ]
+    ],
+    [
+      "diet",
+      "다이어트",
+      [
+        "/diet/"
+      ]
+    ]
+  ],
+  "treatments": [
+    "/pico-laser/"
+  ]
 }

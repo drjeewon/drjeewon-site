@@ -167,6 +167,9 @@ def clinic_schema():
              "opens": h["opens"], "closes": h["closes"]} for h in C["hours"]
         ],
         "medicalSpecialty": "Dermatology",
+        "image": D + C.get("image", "/static/og.jpg"),
+        "priceRange": C.get("price_range", "₩₩"),
+        **({"hasMap": C["place"]} if C.get("place") else {}),
         **({"potentialAction": {"@type": "ReserveAction", "target": C["booking"]}} if C.get("booking") else {}),
         "sameAs": [u for u in (C["url"], C.get("place"), C.get("blog"), C.get("instagram"), C["kakao"]) if u],
     }
@@ -268,8 +271,26 @@ def list_html(pages, limit=None):
     return f'<ul class="list">{items}</ul>' if items else '<p class="note">곧 첫 글이 올라옵니다.</p>'
 
 
+def static_selfcheck(body):
+    """자바스크립트를 안 읽는 크롤러도 자가체크 결과 기준을 읽을 수 있게 결과 칸에 미리 적어 둔다."""
+    def fill(mm):
+        rules = json.loads(html.unescape(mm.group(1)))
+        rest = mm.group(2)
+        parts = []
+        for i, (n, msg) in enumerate(rules):
+            nxt = rules[i + 1][0] if i + 1 < len(rules) else None
+            rng = f"{n}개 이상" if nxt is None else (f"{n}개" if nxt - 1 == n else f"{n}~{nxt - 1}개")
+            parts.append(f"{rng}: {esc(msg)}")
+        text = "체크한 개수별 안내<br>" + "<br>".join(parts)
+        rest = rest.replace('<p class="result" aria-live="polite"></p>',
+                            f'<p class="result" aria-live="polite">{text}</p>', 1)
+        return mm.group(0)[:mm.start(2) - mm.start(0)] + rest
+    return re.sub(r"""<div class="selfcheck" data-rules='(.*?)'>(.*?</div>)""", fill, body, flags=re.S)
+
+
 def render(m):
     body = m["body"]
+    body = static_selfcheck(body)
     body = body.replace("{{FAQ}}", faq_html(m)).replace("{{REVIEWER}}", reviewer_html(m))
     body = body.replace("{{CLINIC}}", clinic_html(m)).replace("{{DOMAIN}}", D)
     body = body.replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)

@@ -179,6 +179,10 @@ def doctor_schema():
         "jobTitle": CFG["doctor_title"],
         "url": f"{D}/doctor/",
         "worksFor": {"@id": f"{D}/#clinic"},
+        **({"image": D + CFG["doctor_image"]} if CFG.get("doctor_image") else {}),
+        **({"memberOf": [{"@type": "Organization", "name": n} for n in CFG["doctor_memberships"]]}
+           if CFG.get("doctor_memberships") else {}),
+        "knowsAbout": ["여드름", "여드름 흉터", "피부질환", "한방 다이어트"],
     }
 
 
@@ -221,7 +225,7 @@ def faq_html(m):
 
 def reviewer_html(m):
     return f'''<aside class="reviewer">
-  <img src="/static/doctor.webp" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="96" height="96" loading="lazy" onerror="this.style.display='none'">
+  <img src="/static/doctor.webp" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="96" height="96" loading="lazy">
   <div>
     <p class="label">감수 한의사</p>
     <p class="name"><a href="/doctor/">{esc(CFG["doctor"])}</a> · {esc(CFG["doctor_title"])}</p>

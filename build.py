@@ -507,7 +507,7 @@ def render(m):
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
 <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
-<meta name="theme-color" content="#f7f4f1">
+<meta name="theme-color" content="#f7f8fa">
 <script type="application/ld+json">
 {page_schema(m)}
 </script>

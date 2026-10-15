@@ -218,6 +218,9 @@ def clinic_schema():
              "opens": h["opens"], "closes": h["closes"]} for h in C["hours"]
         ],
         "medicalSpecialty": "Dermatology",
+        "areaServed": [{"@type": "City", "name": "인천광역시"}, {"@type": "Place", "name": "인천 남동구 구월동"}],
+        "knowsAbout": CLINIC_TOPICS,
+        "isAcceptingNewPatients": True,
         "image": D + C.get("image", "/static/og.jpg"),
         "priceRange": C.get("price_range", "₩₩"),
         **({"hasMap": C["place"]} if C.get("place") else {}),
@@ -334,6 +337,17 @@ def list_html(pages, limit=None):
     return f'<ul class="list">{items}</ul>' if items else '<p class="note">첫 칼럼을 준비하고 있습니다. 그동안 아래 질환별 글을 먼저 읽어 보세요.</p>'
 
 
+def related_cols_html(m):
+    """질환 페이지 ↔ 칼럼을 서로 묶는다: 질환 페이지에는 그 질환 칼럼 목록, 칼럼에는 같은 질환의 다른 칼럼."""
+    key = m.get("related") if m.get("column") else m["path"]
+    cols = [c for c in ALL_COLUMNS if key and c.get("related") == key and c["path"] != m["path"]][:6]
+    if not cols:
+        return ""
+    title = "같은 주제의 다른 칼럼" if m.get("column") else f"{m.get('short', m['h1'])} 관련 칼럼"
+    items = "".join(f'<li><a href="{c["path"]}">{esc(c["h1"])}</a></li>' for c in cols)
+    return f'<section class="related-cols"><h2>{esc(title)}</h2><ul class="list">{items}</ul></section>\n'
+
+
 def column_list_html(cols):
     if not cols:
         return list_html([])
@@ -363,6 +377,7 @@ def static_selfcheck(body):
 def render(m):
     body = m["body"]
     body = static_selfcheck(body)
+    body = body.replace("{{REVIEWER}}", related_cols_html(m) + "{{REVIEWER}}", 1)
     body = body.replace("{{FAQ}}", faq_html(m)).replace("{{REVIEWER}}", reviewer_html(m))
     body = body.replace("{{CLINIC}}", clinic_html(m)).replace("{{DOMAIN}}", D)
     body = body.replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)
@@ -463,6 +478,11 @@ def render(m):
 '''
 
 
+ALL_COLUMNS = []
+CLINIC_TOPICS = ["여드름", "청소년 여드름", "등드름·몸여드름", "여드름 흉터", "여드름 자국", "기미", "흑자·잡티", "주근깨",
+                 "주사피부염·안면홍조", "지루성피부염", "한관종", "편평사마귀", "쥐젖·비립종·검버섯", "모공각화증", "한방 다이어트"]
+
+
 def main():
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -487,7 +507,8 @@ def main():
         DISEASES_HTML += ('<h2 id="treatments">치료 방법 안내</h2><div class="cards">'
                           + "".join(card(m) for m in treatments) + "</div>")
     by_date = lambda ms: sorted(ms, key=lambda m: m["published"], reverse=True)
-    COLUMNS_HTML = column_list_html(by_date([m for m in pages if m.get("column")]))
+    ALL_COLUMNS[:] = by_date([m for m in pages if m.get("column")])
+    COLUMNS_HTML = column_list_html(ALL_COLUMNS)
     LATEST_HTML = list_html(by_date([m for m in pages if m.get("medical")]), 8)
     for m in pages:
         if m.get("thumb"):

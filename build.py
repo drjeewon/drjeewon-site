@@ -172,31 +172,44 @@ def thumb_lines(spec, title):
 
 
 def make_thumb(lines, out):
-    """칼럼 썸네일 1200x1200: 병원 블로그와 같은 메모지 배경, 첫 줄은 형광펜 강조, 나머지는 질문."""
+    """칼럼 썸네일 1200x1200: 남색 바탕, 첫 줄(강조할 말)은 크게 노란색, 나머지(질문)는 흰색."""
     from PIL import Image, ImageDraw, ImageFont
     fonts = ROOT / "assets" / "fonts"
-    im = Image.open(ROOT / "assets" / "thumb-bg.jpg").convert("RGB")
+    W, maxw = 1200, 1020
+    im = Image.new("RGB", (W, W), "#1f4289")
     d = ImageDraw.Draw(im)
-    cx, maxw = 592, 840
-    size = 150
-    while size > 70:
-        f = ImageFont.truetype(str(fonts / "Pretendard-Bold.otf"), size)
-        if max(d.textlength(x, font=f) for x in lines) <= maxw:
-            break
-        size -= 4
-    gap = int(size * 1.32)
-    top = 600 - gap * len(lines) // 2
-    for i, x in enumerate(lines):
-        y = top + i * gap + gap // 2
-        w = d.textlength(x, font=f)
-        if i == 0:
-            d.rectangle([cx - w / 2 - 14, y + size * 0.02, cx + w / 2 + 14, y + size * 0.42], fill="#e4d9cf")
-        d.text((cx, y), x, font=f, fill="#7d6855" if i == 0 else "#2f2f2f", anchor="mm")
-    small = ImageFont.truetype(str(fonts / "Pretendard-SemiBold.otf"), 34)
-    d.text((cx, 300), f"{CFG['doctor']} 한의사의 피부 이야기", font=small, fill="#9a8775", anchor="mm")
-    d.text((cx, 930), "drjeewon.kr", font=small, fill="#b3a392", anchor="mm")
+    font = lambda s, w="Black": ImageFont.truetype(str(fonts / f"Pretendard-{w}.otf"), s)
+
+    def fit(text, start, low, w="Black"):
+        s = start
+        while s > low and d.textlength(text, font=font(s, w)) > maxw:
+            s -= 4
+        return font(s, w), s
+
+    def wrap(text, f):
+        if d.textlength(text, font=f) <= maxw:
+            return [text]
+        words = text.split()
+        best = min(range(1, len(words)), key=lambda k: abs(len(" ".join(words[:k])) - len(" ".join(words[k:])))) if len(words) > 1 else 1
+        return [" ".join(words[:best]), " ".join(words[best:])]
+
+    key, rest = lines[0], " ".join(lines[1:])
+    kf, ks = fit(key, 250, 120)
+    sub_f = font(112, "Bold")
+    sub = wrap(rest, sub_f) if rest else []
+    while sub and max(d.textlength(x, font=sub_f) for x in sub) > maxw and sub_f.size > 64:
+        sub_f = font(sub_f.size - 4, "Bold")
+    top_f = font(76, "Bold")
+    blocks = [(f"{CFG['doctor']} 한의사", top_f, "#fdf09a", 76 * 1.9)]
+    blocks.append((key, kf, "#fbe359", ks * 1.32))
+    blocks += [(x, sub_f, "#ffffff", sub_f.size * 1.38) for x in sub]
+    total = sum(h for *_, h in blocks)
+    y = (W - total) / 2
+    for text, f, color, h in blocks:
+        d.text((W / 2, y + h / 2), text, font=f, fill=color, anchor="mm")
+        y += h
     out.parent.mkdir(parents=True, exist_ok=True)
-    im.save(out, quality=86, optimize=True)
+    im.save(out, quality=88, optimize=True)
 
 
 def clinic_schema():

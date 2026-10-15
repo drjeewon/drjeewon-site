@@ -61,3 +61,8 @@ img.portrait{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 
 .refs h2{font-size:1.05rem}
 .refs ol{padding-left:1.3em}
 .refs li{margin:.3em 0;word-break:break-word}
+.events{display:grid;gap:8px;margin:12px 0 16px}
+.events .label{margin:0;font-size:13px;color:var(--muted)}
+.event{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);text-decoration:none;font-weight:600}
+.event span{flex:none;font-size:13px;font-weight:400;color:var(--accent)}
+.event:hover{border-color:var(--accent)}

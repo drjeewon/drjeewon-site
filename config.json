@@ -60,5 +60,55 @@
   ],
   "verify": {
     "naver-site-verification": "7439ae48894f371add246c7717e5c4b544215391"
+  },
+  "events": {
+    "/acne/": [
+      [
+        "여드름 아그네스 · 1회 체험 99,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10275"
+      ],
+      [
+        "여드름 압출 케어 · 1회 99,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9628"
+      ],
+      [
+        "후 아크네 케어 6~12주 · 790,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10274"
+      ]
+    ],
+    "/acne/teen/": [
+      [
+        "여드름 압출 케어 · 1회 99,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9628"
+      ],
+      [
+        "후 아크네 케어 6~12주 · 790,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10274"
+      ]
+    ],
+    "/acne/look-alikes/": [
+      [
+        "여드름 압출 케어 · 1회 99,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9628"
+      ]
+    ],
+    "/acne-scar/": [
+      [
+        "여드름 흉터 치료 (새살침·듀얼테라피)",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9306"
+      ]
+    ],
+    "/flat-wart/": [
+      [
+        "편평사마귀 사율침 제거",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9299"
+      ]
+    ],
+    "/syringoma/": [
+      [
+        "한관종 아그네스",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9314"
+      ]
+    ]
   }
 }

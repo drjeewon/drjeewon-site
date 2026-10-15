@@ -142,6 +142,7 @@ def read_column(p):
         "published": when,
         "updated": get("수정", "updated") or when,
         "crumbs": [["칼럼", "/column/"]],
+        "related": get("관련", "related"),
         "faq": faq,
         "body": md_to_html("\n".join(rest)) + ("\n{{FAQ}}" if faq else "") + "\n{{REVIEWER}}\n{{CLINIC}}",
     }
@@ -240,10 +241,21 @@ def reviewer_html(m):
 </aside>'''
 
 
+def events_html(m):
+    """질환 페이지·칼럼에서 해당 시술 이벤트 페이지로 바로 가는 버튼.
+    config.json events: {"/acne/": [["이름 · 가격", "주소"], ...]}. 칼럼은 머리말 '관련: /acne/'로 고름."""
+    evs = CFG.get("events", {}).get(m.get("related") or m["path"], [])
+    if not evs:
+        return ""
+    items = "".join(f'<a class="event" href="{esc(u)}">{esc(n)}<span>자세히 보기 ›</span></a>' for n, u in evs)
+    return f'<div class="events"><p class="label">관련 시술·이벤트 (후한의원 인천점 홈페이지)</p>{items}</div>'
+
+
 def clinic_html(m):
     return f'''<section class="clinic" id="clinic">
   <h2>{esc(m.get("clinic_heading", "진료 안내"))}</h2>
   {f'<p>{esc(m["clinic_intro"])}</p>' if m.get("clinic_intro") else ""}
+  {events_html(m)}
   <dl>
     <dt>병원</dt><dd><a href="{C["url"]}">{esc(C["name"])}</a></dd>
     <dt>주소</dt><dd>{esc(C["region"])} {esc(C["locality"])} {esc(C["street"])} ({esc(C["subway"])})</dd>

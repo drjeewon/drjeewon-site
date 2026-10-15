@@ -255,7 +255,7 @@ header.site nav a:hover{background:none;color:var(--accent)}
 .pg:nth-last-child(-n+3){border-bottom:0}
 .pg:hover{background:rgba(255,255,255,.04)}
 .pg-en{margin:0 0 14px;font-size:12px;letter-spacing:.2em;color:#9fb0d3}
-.pg h3{margin:0 0 12px;font-size:1.3rem;font-weight:700;color:#fff}
+.pg h3{margin:0 0 14px;font-size:1.65rem;font-weight:800;letter-spacing:-.035em;line-height:1.35;color:#fff}
 .pg-d{margin:0 0 20px;font-size:15px;color:#c3cde2;line-height:1.7}
 .pg ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .pg li a{display:inline-block;padding:7px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#f4f6fb;text-decoration:none;font-size:14px;transition:background .2s,border-color .2s}
@@ -296,3 +296,4 @@ footer.site .f-logo{opacity:.9}
 .ic{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:none}
 .ic.call{background:var(--pop);border-color:var(--pop);color:var(--ink)}
 @media (max-width:560px){.dock{border-radius:999px;padding:6px 6px 6px 16px}}
+@media (max-width:860px){.pg h3{font-size:1.45rem}}

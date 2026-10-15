@@ -167,6 +167,7 @@ def clinic_schema():
              "opens": h["opens"], "closes": h["closes"]} for h in C["hours"]
         ],
         "medicalSpecialty": "Dermatology",
+        **({"potentialAction": {"@type": "ReserveAction", "target": C["booking"]}} if C.get("booking") else {}),
         "sameAs": [C["url"], C["kakao"]],
     }
 
@@ -247,7 +248,8 @@ def clinic_html(m):
     <dt>주차</dt><dd>{esc(C["parking"])}</dd>
   </dl>
   <div class="cta">
-    <a class="btn primary" href="tel:{C["tel"]}">전화 문의</a>
+    {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
+    <a class="btn" href="tel:{C["tel"]}">전화 문의</a>
     <a class="btn" href="{C["kakao"]}">카카오톡 상담</a>
     <a class="btn" href="{C["url"]}">홈페이지·예약</a>
   </div>

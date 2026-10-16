@@ -307,6 +307,11 @@ def page_schema(m):
         graph.append({"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": n, "item": u}
             for i, (n, u) in enumerate(crumbs)]})
+    if m["path"] == "/" and DISEASE_LIST:
+        graph.append({"@type": "ItemList", "@id": f"{D}/#diseases", "name": "인천 구월동 후한의원 인천점 질환 안내",
+                      "numberOfItems": len(DISEASE_LIST), "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": x["short"], "url": D + x["path"]}
+            for i, x in enumerate(DISEASE_LIST)]})
     if m.get("faq"):
         graph.append({"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q,
@@ -319,7 +324,7 @@ def faq_html(m):
     items = "".join(
         f'<details class="faq"><summary><span class="q">Q.</span><span class="qt">{esc(q)}</span></summary><p>{esc(a)}</p></details>'
         for q, a in m.get("faq", []))
-    return f'<section id="faq"><p class="eyebrow">FAQ</p><h2>자주 묻는 질문</h2>{items}</section>'
+    return f'<section id="faq"><p class="eyebrow">FAQ</p><h2>{esc(m.get("faq_heading", "자주 묻는 질문"))}</h2>{items}</section>'
 
 
 def reviewer_html(m):
@@ -425,6 +430,7 @@ def related_cols_html(m):
 
 
 SIBLINGS = {}
+DISEASE_LIST = []
 
 
 def siblings_html(m):
@@ -604,6 +610,7 @@ def main():
     if rest:
         groups.append(("etc", "기타", rest))
     diseases = [m for _, _, ms in groups for m in ms]
+    DISEASE_LIST[:] = diseases
     for _, name, ms in groups:
         for m in ms:
             if len(ms) > 1:

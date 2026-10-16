@@ -309,3 +309,47 @@ footer.site .f-logo{opacity:.9}
 .space-grid figcaption{position:absolute;left:12px;bottom:12px;background:rgba(20,36,74,.78);color:#fff;font-size:13px;font-weight:600;padding:5px 11px;border-radius:999px}
 @media (max-width:860px){.space{padding:48px 0 12px}.space-grid{grid-template-columns:1fr 1fr;gap:10px}.space-grid .sg-video{grid-column:1/-1;grid-row:auto;aspect-ratio:16/9}}
 .doc-photos{grid-template-columns:1fr 1fr;margin:22px 0 8px}
+
+/* ===== 사진 첫 화면 + 원장 카드 + 공간 카드 (2026-10-16, 호랑이부부 구성 참고) ===== */
+main.home{padding-top:0}
+.director{position:relative;z-index:2;display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow-lg);padding:36px 48px 36px 36px;margin:-90px 0 24px}
+.dir-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 8%;border-radius:20px;background:var(--soft);display:block}
+.dir-body .eyebrow{margin:0 0 12px}
+.director h2.duo{font-size:clamp(1.5rem,2.6vw,2.15rem);line-height:1.35;margin:0 0 18px}
+.dir-body p{color:var(--text-2);margin:0 0 18px}
+.dir-sign{display:flex;align-items:baseline;gap:10px}
+.dir-sign b{font-size:1.25rem;color:var(--text)}
+.dir-sign span{font-size:14px;color:var(--muted)}
+.space-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:28px}
+.space-head h2{margin:0}
+.space-head .sub{max-width:360px;color:var(--text-2);margin:0;font-size:15.5px}
+.space-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.space-cards figure,.space-video{margin:0;position:relative;border-radius:20px;overflow:hidden;background:var(--soft)}
+.space-cards img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.space-cards figure:hover img{transform:scale(1.04)}
+.space-cards figcaption,.space-video figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 20px 18px;background:linear-gradient(transparent,rgba(20,36,74,.85));color:#fff;display:flex;flex-direction:column;gap:2px}
+.space-cards figcaption b,.space-video figcaption b{font-size:1.1rem}
+.space-cards figcaption span,.space-video figcaption span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.space-video{margin-top:14px}
+.space-video video{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+@media (max-width:860px){
+  .director{grid-template-columns:1fr;gap:22px;padding:22px;margin-top:-80px}
+  .dir-photo img{aspect-ratio:1/1;max-width:220px}
+  .space-head{flex-direction:column;align-items:flex-start;gap:12px}
+  .space-cards{grid-template-columns:1fr 1fr;gap:10px}
+  .space-video video{aspect-ratio:16/9}
+}
+.director{margin:72px 0 40px}
+@media (max-width:860px){.director{margin:48px 0 28px}}
+
+/* 첫 화면: 밝은 바탕 + 은은한 한의원 사진 (2026-10-16 v4.1) */
+.hero.hero-soft{position:relative;display:block;margin-top:14px !important;width:calc(100vw - 48px);max-width:1680px;margin:0 0 0 50%;transform:translateX(-50%);padding:0;border-radius:40px 40px 0 0;overflow:hidden;
+  background:linear-gradient(180deg,rgba(247,248,250,.15) 0%,rgba(247,248,250,.55) 55%,var(--bg) 100%),url(/static/img/hero-bg.webp) center 35%/cover no-repeat}
+.hs-inner{max-width:860px;margin:0 auto;padding:132px 24px 120px;text-align:center}
+.hero-soft .eyebrow{margin:0 0 22px}
+.hero-soft h1{margin:0 0 26px;line-height:1.25}
+.hero-soft h1 span{font-size:.62em;font-weight:300;letter-spacing:-.03em;color:var(--text-2);margin-bottom:.35em}
+.hero-soft h1{font-size:clamp(2.3rem,5vw,3.9rem);font-weight:800;letter-spacing:-.045em;color:var(--text)}
+.hero-soft .lead{margin:0 auto 32px;max-width:36em;color:var(--text-2)}
+.hero-soft .cta{justify-content:center}
+@media (max-width:860px){.hero.hero-soft{width:calc(100vw - 20px);border-radius:26px 26px 0 0}.hs-inner{padding:72px 18px 64px}.hero-soft h1{font-size:clamp(1.95rem,8vw,2.4rem)}}

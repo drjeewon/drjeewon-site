@@ -14,7 +14,7 @@
     "region": "인천광역시",
     "postal": "",
     "subway": "인천1호선 인천터미널역 2번 출구",
-    "kakao": "http://pf.kakao.com/_uHPiX/",
+    "kakao": "https://pf.kakao.com/_uHPiX/",
     "hours_text": "월·화·목·금 11:00~20:30 (점심 14:00~15:30) · 토 10:00~15:00 · 수·일·공휴일 휴진",
     "parking": "건물 지하주차장 2시간 지원 (만차 시 문화예술회관 공영주차장 2시간 지원)",
     "hours": [
@@ -234,7 +234,7 @@
     ],
     [
       "카카오톡으로 상담 남기기",
-      "http://pf.kakao.com/_uHPiX/"
+      "https://pf.kakao.com/_uHPiX/"
     ]
   ],
   "group_info": {

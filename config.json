@@ -75,6 +75,8 @@
     "parking_note": "기계식 주차장이라 큰 차는 들어가기 어려워요. 만차이거나 차가 크면 공영주차장을 이용해 주세요."
   },
   "doctor_image": "/static/doctor-portrait.webp",
+  "hero_image": "/static/img/hero-consult.webp",
+  "hero_alt": "김지원 원장이 진료실에서 환자와 직접 상담하는 모습",
   "doctor_career": [
     "후한의원 인천점 대표원장",
     "자양한방병원 진료과장",

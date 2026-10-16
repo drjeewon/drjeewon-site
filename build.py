@@ -495,7 +495,7 @@ def render(m):
       <a class="btn" href="{C["url"]}">홈페이지</a>
     </div>
   </div>
-  <img class="hero-img" src="{CFG.get("doctor_image", "/static/doctor-portrait.webp")}" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="900" height="1350">
+  <img class="hero-img" src="{CFG.get("hero_image", CFG.get("doctor_image", "/static/doctor-portrait.webp"))}" alt="{esc(CFG.get("hero_alt", "후한의원 인천점 " + CFG["doctor"] + " 대표원장"))}" width="900" height="1000" fetchpriority="high">
 </section>'''
     return f'''<!doctype html>
 <html lang="ko">

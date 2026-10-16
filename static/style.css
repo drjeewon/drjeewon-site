@@ -362,3 +362,6 @@ main.home{padding-top:0}
 .hero-photo .hero-text{max-width:640px}
 .hero-photo h1{font-size:clamp(2rem,3.5vw,3.05rem)}
 @media (max-width:860px){.hp-bg{width:100%}.hp-bg::after{background:linear-gradient(transparent 55%,var(--ink))}}
+.director{margin:72px 0 40px}
+.hp-inner{padding-bottom:110px}
+@media (max-width:860px){.director{margin:48px 0 28px}.hp-inner{padding-bottom:56px}}

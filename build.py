@@ -498,16 +498,6 @@ def render(m):
     </div>
   </div>
   </div>
-</section>
-<section class="director">
-  <div class="dir-photo"><img src="{CFG.get("doctor_image", "/static/doctor-portrait.webp")}" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="900" height="1350" loading="eager"></div>
-  <div class="dir-body">
-    <p class="eyebrow">DIRECTOR</p>
-    <h2 class="duo"><span>피부는 몸과 마음의 상태가</span> 그대로 드러나는 곳입니다.</h2>
-    <p>그래서 겉을 덮어 가리기보다, 몸이 편안해졌을 때 자연스럽게 맑아지는 피부를 목표로 진료합니다. 진찰과 상담은 제가 직접 하고, 눈에 보이는 증상뿐 아니라 꺼내기 어려웠던 작은 고민까지 함께 듣겠습니다.</p>
-    <p class="dir-sign"><b>{esc(CFG["doctor"])}</b><span>{esc(C["name"])} 대표원장</span></p>
-    <a class="btn" href="/doctor/">원장 소개 보기 →</a>
-  </div>
 </section>'''
     return f'''<!doctype html>
 <html lang="ko">

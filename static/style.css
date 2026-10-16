@@ -312,18 +312,6 @@ footer.site .f-logo{opacity:.9}
 
 /* ===== 사진 첫 화면 + 원장 카드 + 공간 카드 (2026-10-16, 호랑이부부 구성 참고) ===== */
 main.home{padding-top:0}
-.hero.hero-photo{position:relative;display:block;width:100vw;margin-left:calc(50% - 50vw);padding:0;min-height:640px;color:#fff;overflow:hidden;background:var(--ink)}
-.hp-bg{position:absolute;inset:0}
-.hp-bg img{width:100%;height:100%;object-fit:cover;object-position:62% 30%;display:block}
-.hp-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,36,74,.94) 0%,rgba(20,36,74,.82) 34%,rgba(20,36,74,.25) 66%,rgba(20,36,74,0) 100%)}
-.hp-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:120px 24px 150px}
-.hero-photo .hero-text{max-width:600px}
-.hero-photo .eyebrow{color:var(--pop)}
-.hero-photo h1{color:#fff}
-.hero-photo .lead{color:rgba(255,255,255,.86)}
-.hero-photo .btn{border-color:rgba(255,255,255,.7);color:#fff;background:transparent}
-.hero-photo .btn:hover{background:rgba(255,255,255,.12)}
-.hero-photo .btn.primary{background:var(--pop);border-color:var(--pop);color:var(--ink)}
 .director{position:relative;z-index:2;display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow-lg);padding:36px 48px 36px 36px;margin:-90px 0 24px}
 .dir-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 8%;border-radius:20px;background:var(--soft);display:block}
 .dir-body .eyebrow{margin:0 0 12px}
@@ -345,23 +333,23 @@ main.home{padding-top:0}
 .space-video{margin-top:14px}
 .space-video video{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
 @media (max-width:860px){
-  .hero.hero-photo{min-height:0}
-  .hp-bg{position:relative}
-  .hp-bg img{aspect-ratio:4/3;height:auto;object-position:center 30%}
-  .hp-bg::after{background:linear-gradient(transparent 55%,var(--ink))}
-  .hp-inner{padding:6px 18px 110px}
   .director{grid-template-columns:1fr;gap:22px;padding:22px;margin-top:-80px}
   .dir-photo img{aspect-ratio:1/1;max-width:220px}
   .space-head{flex-direction:column;align-items:flex-start;gap:12px}
   .space-cards{grid-template-columns:1fr 1fr;gap:10px}
   .space-video video{aspect-ratio:16/9}
 }
-.hp-bg{left:auto;right:0;width:64%}
-.hp-bg img{border-radius:0;object-position:center 30%}
-.hp-bg::after{background:linear-gradient(90deg,var(--ink) 0%,rgba(20,36,74,.55) 28%,rgba(20,36,74,0) 60%)}
-.hero-photo .hero-text{max-width:640px}
-.hero-photo h1{font-size:clamp(2rem,3.5vw,3.05rem)}
-@media (max-width:860px){.hp-bg{width:100%}.hp-bg::after{background:linear-gradient(transparent 55%,var(--ink))}}
 .director{margin:72px 0 40px}
-.hp-inner{padding-bottom:110px}
-@media (max-width:860px){.director{margin:48px 0 28px}.hp-inner{padding-bottom:56px}}
+@media (max-width:860px){.director{margin:48px 0 28px}}
+
+/* 첫 화면: 밝은 바탕 + 은은한 한의원 사진 (2026-10-16 v4.1) */
+.hero.hero-soft{position:relative;display:block;margin-top:14px !important;width:calc(100vw - 48px);max-width:1680px;margin:0 0 0 50%;transform:translateX(-50%);padding:0;border-radius:40px 40px 0 0;overflow:hidden;
+  background:linear-gradient(180deg,rgba(247,248,250,.15) 0%,rgba(247,248,250,.55) 55%,var(--bg) 100%),url(/static/img/hero-bg.webp) center 35%/cover no-repeat}
+.hs-inner{max-width:860px;margin:0 auto;padding:132px 24px 120px;text-align:center}
+.hero-soft .eyebrow{margin:0 0 22px}
+.hero-soft h1{margin:0 0 26px;line-height:1.25}
+.hero-soft h1 span{font-size:.62em;font-weight:300;letter-spacing:-.03em;color:var(--text-2);margin-bottom:.35em}
+.hero-soft h1{font-size:clamp(2.3rem,5vw,3.9rem);font-weight:800;letter-spacing:-.045em;color:var(--text)}
+.hero-soft .lead{margin:0 auto 32px;max-width:36em;color:var(--text-2)}
+.hero-soft .cta{justify-content:center}
+@media (max-width:860px){.hero.hero-soft{width:calc(100vw - 20px);border-radius:26px 26px 0 0}.hs-inner{padding:72px 18px 64px}.hero-soft h1{font-size:clamp(1.95rem,8vw,2.4rem)}}

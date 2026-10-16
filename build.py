@@ -483,10 +483,8 @@ def render(m):
         lead = mm.group(1) if mm else ""
         if mm:
             body = body[:mm.start()] + body[mm.end():]
-        hero = f'''<section class="hero hero-photo">
-  <div class="hp-bg"><picture><source media="(max-width:860px)" srcset="/static/img/hero-mobile.webp"><img src="/static/img/hero-wide.webp" alt="{esc(CFG.get("hero_alt", "후한의원 인천점 진료실"))}" width="1920" height="1080" fetchpriority="high"></picture></div>
-  <div class="hp-inner">
-  <div class="hero-text">
+        hero = f'''<section class="hero hero-soft">
+  <div class="hs-inner">
     <p class="eyebrow">HOO CLINIC · INCHEON GUWOL</p>
     <h1 class="duo">{duo_h1(m["h1"])}</h1>
     <p class="lead">{lead}</p>
@@ -496,7 +494,6 @@ def render(m):
       <a class="btn" href="{C["kakao"]}">카카오톡 상담</a>
       <a class="btn" href="{C["url"]}">홈페이지</a>
     </div>
-  </div>
   </div>
 </section>'''
     return f'''<!doctype html>

@@ -424,6 +424,18 @@ def related_cols_html(m):
     return f'<section class="related-cols"><h2>{esc(title)}</h2><ul class="list">{items}</ul></section>\n'
 
 
+SIBLINGS = {}
+
+
+def siblings_html(m):
+    """질환 페이지 끝에 같은 그룹의 다른 질환 글을 묶어 내부 링크가 고르게 가도록."""
+    if m.get("column") or m["path"] not in SIBLINGS:
+        return ""
+    name, sibs = SIBLINGS[m["path"]]
+    items = "".join(f'<li><a href="{x["path"]}">{esc(x["short"])}</a> <span class="note">{esc(x["card"])}</span></li>' for x in sibs)
+    return f'<section class="related-cols"><h2>{esc(name)}, 함께 보면 좋은 글</h2><ul class="list">{items}</ul></section>\n'
+
+
 def column_list_html(cols, search=False):
     if not cols:
         return list_html([])
@@ -463,7 +475,7 @@ def duo_h1(t):
 def render(m):
     body = m["body"]
     body = static_selfcheck(body)
-    body = body.replace("{{REVIEWER}}", related_cols_html(m) + "{{REVIEWER}}", 1)
+    body = body.replace("{{REVIEWER}}", related_cols_html(m) + siblings_html(m) + "{{REVIEWER}}", 1)
     body = body.replace("{{FAQ}}", faq_html(m)).replace("{{REVIEWER}}", reviewer_html(m))
     body = body.replace("{{CLINIC}}", clinic_html(m)).replace("{{DOMAIN}}", D)
     body = body.replace("{{PROGRAMS}}", PROGRAMS_HTML).replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)
@@ -504,7 +516,7 @@ def render(m):
 <title>{esc(m["title"])}</title>
 <meta name="description" content="{esc(m["description"])}">
 <link rel="canonical" href="{url}">
-<meta name="robots" content="{"noindex, nofollow" if PREVIEW else "index, follow, max-image-preview:large"}">
+<meta name="robots" content="{"noindex, nofollow" if PREVIEW else ("noindex, follow" if m.get("noindex") else "index, follow, max-image-preview:large")}">
 <meta name="author" content="{esc(CFG["doctor"])}">
 <meta property="og:type" content="{"article" if m.get("medical") else "website"}">
 <meta property="og:site_name" content="{esc(CFG["site_name"])}">
@@ -592,6 +604,10 @@ def main():
     if rest:
         groups.append(("etc", "기타", rest))
     diseases = [m for _, _, ms in groups for m in ms]
+    for _, name, ms in groups:
+        for m in ms:
+            if len(ms) > 1:
+                SIBLINGS[m["path"]] = (name, [x for x in ms if x is not m])
     treatments = [carded[u] for u in treat_paths]
     card = lambda m: f'<div class="card"><h4><a href="{m["path"]}">{esc(m["short"])}</a></h4><p>{esc(m["card"])}</p></div>'
     DISEASES_HTML = "".join(
@@ -619,6 +635,12 @@ def main():
         out = DIST / m["path"].strip("/") / "index.html" if m["path"] != "/" else DIST / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(with_base(render(m)), encoding="utf-8")
+    # 없는 주소로 들어온 사람도 질환 목록·예약으로 이어지게 (GitHub Pages는 /404.html을 씀)
+    nf = DIST / "404" / "index.html"
+    if nf.exists():
+        nf.replace(DIST / "404.html")
+        nf.parent.rmdir()
+    pages = [m for m in pages if not m.get("noindex")]
     urls = "".join(
         f"<url><loc>{D}{m['path']}</loc><lastmod>{m['updated']}</lastmod></url>" for m in pages)
     (DIST / "sitemap.xml").write_text(

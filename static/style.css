@@ -309,3 +309,56 @@ footer.site .f-logo{opacity:.9}
 .space-grid figcaption{position:absolute;left:12px;bottom:12px;background:rgba(20,36,74,.78);color:#fff;font-size:13px;font-weight:600;padding:5px 11px;border-radius:999px}
 @media (max-width:860px){.space{padding:48px 0 12px}.space-grid{grid-template-columns:1fr 1fr;gap:10px}.space-grid .sg-video{grid-column:1/-1;grid-row:auto;aspect-ratio:16/9}}
 .doc-photos{grid-template-columns:1fr 1fr;margin:22px 0 8px}
+
+/* ===== 사진 첫 화면 + 원장 카드 + 공간 카드 (2026-10-16, 호랑이부부 구성 참고) ===== */
+main.home{padding-top:0}
+.hero.hero-photo{position:relative;display:block;width:100vw;margin-left:calc(50% - 50vw);padding:0;min-height:640px;color:#fff;overflow:hidden;background:var(--ink)}
+.hp-bg{position:absolute;inset:0}
+.hp-bg img{width:100%;height:100%;object-fit:cover;object-position:62% 30%;display:block}
+.hp-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,36,74,.94) 0%,rgba(20,36,74,.82) 34%,rgba(20,36,74,.25) 66%,rgba(20,36,74,0) 100%)}
+.hp-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:120px 24px 150px}
+.hero-photo .hero-text{max-width:600px}
+.hero-photo .eyebrow{color:var(--pop)}
+.hero-photo h1{color:#fff}
+.hero-photo .lead{color:rgba(255,255,255,.86)}
+.hero-photo .btn{border-color:rgba(255,255,255,.7);color:#fff;background:transparent}
+.hero-photo .btn:hover{background:rgba(255,255,255,.12)}
+.hero-photo .btn.primary{background:var(--pop);border-color:var(--pop);color:var(--ink)}
+.director{position:relative;z-index:2;display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow-lg);padding:36px 48px 36px 36px;margin:-90px 0 24px}
+.dir-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 8%;border-radius:20px;background:var(--soft);display:block}
+.dir-body .eyebrow{margin:0 0 12px}
+.director h2.duo{font-size:clamp(1.5rem,2.6vw,2.15rem);line-height:1.35;margin:0 0 18px}
+.dir-body p{color:var(--text-2);margin:0 0 18px}
+.dir-sign{display:flex;align-items:baseline;gap:10px}
+.dir-sign b{font-size:1.25rem;color:var(--text)}
+.dir-sign span{font-size:14px;color:var(--muted)}
+.space-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-bottom:28px}
+.space-head h2{margin:0}
+.space-head .sub{max-width:360px;color:var(--text-2);margin:0;font-size:15.5px}
+.space-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.space-cards figure,.space-video{margin:0;position:relative;border-radius:20px;overflow:hidden;background:var(--soft)}
+.space-cards img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.space-cards figure:hover img{transform:scale(1.04)}
+.space-cards figcaption,.space-video figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 20px 18px;background:linear-gradient(transparent,rgba(20,36,74,.85));color:#fff;display:flex;flex-direction:column;gap:2px}
+.space-cards figcaption b,.space-video figcaption b{font-size:1.1rem}
+.space-cards figcaption span,.space-video figcaption span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.space-video{margin-top:14px}
+.space-video video{width:100%;aspect-ratio:21/9;object-fit:cover;display:block}
+@media (max-width:860px){
+  .hero.hero-photo{min-height:0}
+  .hp-bg{position:relative}
+  .hp-bg img{aspect-ratio:4/3;height:auto;object-position:center 30%}
+  .hp-bg::after{background:linear-gradient(transparent 55%,var(--ink))}
+  .hp-inner{padding:6px 18px 110px}
+  .director{grid-template-columns:1fr;gap:22px;padding:22px;margin-top:-80px}
+  .dir-photo img{aspect-ratio:1/1;max-width:220px}
+  .space-head{flex-direction:column;align-items:flex-start;gap:12px}
+  .space-cards{grid-template-columns:1fr 1fr;gap:10px}
+  .space-video video{aspect-ratio:16/9}
+}
+.hp-bg{left:auto;right:0;width:64%}
+.hp-bg img{border-radius:0;object-position:center 30%}
+.hp-bg::after{background:linear-gradient(90deg,var(--ink) 0%,rgba(20,36,74,.55) 28%,rgba(20,36,74,0) 60%)}
+.hero-photo .hero-text{max-width:640px}
+.hero-photo h1{font-size:clamp(2rem,3.5vw,3.05rem)}
+@media (max-width:860px){.hp-bg{width:100%}.hp-bg::after{background:linear-gradient(transparent 55%,var(--ink))}}

@@ -150,7 +150,7 @@ def read_column(p):
         "path": f"/column/{slug}/",
         "medical": True,
         "column": True,
-        "title": f"{title} | {CFG['doctor']} 한의사",
+        "title": f"{get('검색제목', 'seo_title') or title} | {CFG['doctor']} 한의사",
         "h1": title,
         "short": title,
         "description": get("설명", "description"),

@@ -57,11 +57,19 @@ def inline_md(t):
 
 
 def md_to_html(src):
-    """칼럼용 아주 단순한 마크다운: ## ### 문단, - 목록, 1. 목록, > 인용, **굵게**, [링크](주소), ![사진](주소)"""
-    out, para, lst = [], [], None
+    """칼럼용 아주 단순한 마크다운: ## ### 문단, - 목록, 1. 목록, > 인용, | 표 |, **굵게**, [링크](주소), ![사진](주소)"""
+    out, para, lst, rows = [], [], None, []
 
     def flush():
-        nonlocal para, lst
+        nonlocal para, lst, rows
+        if rows:
+            cells = [[c.strip() for c in r.strip("|").split("|")] for r in rows
+                     if not re.fullmatch(r"[|\s:-]+", r)]
+            head, body = cells[0], cells[1:]
+            out.append('<div class="table-wrap"><table><thead><tr>' + "".join(f"<th>{inline_md(c)}</th>" for c in head)
+                       + "</tr></thead><tbody>" + "".join("<tr>" + "".join(f"<td>{inline_md(c)}</td>" for c in r) + "</tr>" for r in body)
+                       + "</tbody></table></div>")
+            rows = []
         if para:
             out.append("<p>" + "<br>".join(inline_md(x) for x in para) + "</p>")
             para = []
@@ -91,6 +99,13 @@ def md_to_html(src):
                 lst = (tag, [])
             lst[1].append(m.group(2))
             continue
+        if t.startswith("|"):
+            if not rows:
+                flush()
+            rows.append(t)
+            continue
+        if rows:
+            flush()
         if t.startswith(">"):
             flush()
             out.append(f'<p class="answer">{inline_md(t.lstrip("> "))}</p>')

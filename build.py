@@ -279,7 +279,7 @@ def doctor_schema():
         **({"image": D + CFG["doctor_image"]} if CFG.get("doctor_image") else {}),
         **({"memberOf": [{"@type": "Organization", "name": n} for n in CFG["doctor_memberships"]]}
            if CFG.get("doctor_memberships") else {}),
-        "knowsAbout": ["여드름", "여드름 흉터", "피부질환", "한방 다이어트"],
+        "knowsAbout": CLINIC_TOPICS,
     }
 
 
@@ -591,7 +591,7 @@ def render(m):
 
 ALL_COLUMNS = []
 CLINIC_TOPICS = ["여드름", "청소년 여드름", "등드름·몸여드름", "여드름 흉터", "여드름 자국", "기미", "흑자·잡티", "주근깨",
-                 "주사피부염·안면홍조", "지루성피부염", "모낭염", "한포진", "한관종", "편평사마귀", "쥐젖·비립종·검버섯", "모공각화증", "한방 다이어트"]
+                 "주사피부염·안면홍조", "지루성피부염", "모낭염", "한포진", "한관종", "편평사마귀", "사마귀", "물사마귀", "쥐젖·비립종·검버섯", "모공각화증", "한방 다이어트"]
 
 
 def main():

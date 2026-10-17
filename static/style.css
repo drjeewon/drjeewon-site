@@ -353,3 +353,4 @@ main.home{padding-top:0}
 .hero-soft .lead{margin:0 auto 32px;max-width:36em;color:var(--text-2)}
 .hero-soft .cta{justify-content:center}
 @media (max-width:860px){.hero.hero-soft{width:calc(100vw - 20px);border-radius:26px 26px 0 0}.hs-inner{padding:72px 18px 64px}.hero-soft h1{font-size:clamp(1.95rem,8vw,2.4rem)}}
+@media (prefers-color-scheme:dark){.hero.hero-soft{background:linear-gradient(180deg,rgba(15,20,32,.62) 0%,rgba(15,20,32,.78) 55%,var(--bg) 100%),url(/static/img/hero-bg.webp) center 35%/cover no-repeat}}

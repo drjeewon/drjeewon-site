@@ -148,6 +148,44 @@
         "한관종 아그네스",
         "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9314"
       ]
+    ],
+    "/acne/body/": [
+      [
+        "등여드름 관리 · 1set 300,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9296"
+      ],
+      [
+        "가슴여드름(가드름) 관리 · 1set 300,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9292"
+      ]
+    ],
+    "/keratosis-pilaris/": [
+      [
+        "팔 모공각화증 관리",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9297"
+      ],
+      [
+        "다리 모공각화증 관리",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9298"
+      ]
+    ],
+    "/skin-growths/": [
+      [
+        "쥐젖 레이저·사율침 제거 · 15개 이하 99,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10478"
+      ]
+    ],
+    "/rosacea/": [
+      [
+        "LDM 진정·보습 관리",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9932"
+      ]
+    ],
+    "/melasma/": [
+      [
+        "레이저토닝",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9629"
+      ]
     ]
   },
   "groups": [

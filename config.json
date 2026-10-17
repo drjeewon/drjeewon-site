@@ -233,7 +233,9 @@
         "/syringoma/",
         "/flat-wart/",
         "/skin-growths/",
-        "/keratosis-pilaris/"
+        "/keratosis-pilaris/",
+        "/common-wart/",
+        "/molluscum/"
       ]
     ],
     [
@@ -298,7 +300,7 @@
     ],
     "bumps": [
       "TEXTURE",
-      "한관종, 편평사마귀, 쥐젖처럼 헷갈리는 돌기를 구분해 정리합니다."
+      "한관종, 편평사마귀, 손발 사마귀, 아이 물사마귀, 쥐젖처럼 헷갈리는 돌기를 구분해 정리합니다."
     ],
     "diet": [
       "DIET",

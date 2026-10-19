@@ -129,6 +129,10 @@
     ],
     "/acne-scar/": [
       [
+        "흉터 시그니처 패키지 A·B·C · 2,753,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10492"
+      ],
+      [
         "여드름 흉터 새살침(트랜스테라피) · 1개 50,000원",
         "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9295"
       ],
@@ -185,6 +189,48 @@
       [
         "레이저토닝",
         "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9629"
+      ]
+    ],
+    "/acne-mark/": [
+      [
+        "시그니처 여드름 자국치료 패키지 · 1,070,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10491"
+      ],
+      [
+        "여드름 자국·얕은 흉터 듀얼테라피",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9306"
+      ]
+    ],
+    "/lentigo/": [
+      [
+        "피코 흑자 제거 · 1개 70,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10489"
+      ],
+      [
+        "레이저토닝",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9629"
+      ]
+    ],
+    "/freckles/": [
+      [
+        "피코 주근깨 제거 · 첫 회 190,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10490"
+      ],
+      [
+        "레이저토닝",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=9629"
+      ]
+    ],
+    "/common-wart/": [
+      [
+        "심상성 사마귀 한약·뜸·약침 · 1달 600,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10488"
+      ]
+    ],
+    "/molluscum/": [
+      [
+        "어린이 물사마귀 한약·침 · 1달 290,000원~",
+        "https://ic.hooclinic.co.kr/clinicPrice/clinicView.php?i=10494"
       ]
     ]
   },

@@ -362,11 +362,11 @@
       "lang_name": "English",
       "home_url": "/en/",
       "name": "Hoo Korean Medicine Clinic Incheon",
-      "site_name": "Kim Jiwon, KMD · Skin Notes",
-      "doctor": "Kim Jiwon",
+      "site_name": "Kim Jeewon, KMD · Skin Notes",
+      "doctor": "Kim Jeewon",
       "doctor_title": "Director, Hoo Korean Medicine Clinic Incheon",
-      "doctor_short": "Kim Jiwon, KMD",
-      "doctor_alt": "Kim Jiwon, director of Hoo Korean Medicine Clinic Incheon",
+      "doctor_short": "Kim Jeewon, KMD",
+      "doctor_alt": "Kim Jeewon, director of Hoo Korean Medicine Clinic Incheon",
       "doctor_url": "/en/#doctor",
       "nav": [
         [
@@ -405,7 +405,7 @@
           "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=en"
         ],
         [
-          "Questions? Send us an Instagram DM",
+          "Send a selfie of your concern by Instagram DM",
           "https://www.instagram.com/hooincheon"
         ],
         [
@@ -455,7 +455,7 @@
         ]
       ],
       "parking_note": "The mechanical lot cannot take large cars, most imported cars or EVs. Use the public lot instead.",
-      "visit_note": "Consultations are held in Korean. If English is easier for you, send your questions or a photo by Instagram DM before your visit, and we will go through everything with a translation app on the day.",
+      "visit_note": "Consultations are held in Korean. Before you come, please take a selfie of the area you want treated and bring it with you, or send it with your questions by Instagram DM. On the day, we will go through everything with a translation app.",
       "live": {
         "days": [
           "Sun",
@@ -481,11 +481,11 @@
       "lang_name": "中文",
       "home_url": "/zh/",
       "name": "HOO韩医院 仁川店",
-      "site_name": "Kim Jiwon 韩医师 · 皮肤笔记",
-      "doctor": "Kim Jiwon",
+      "site_name": "Kim Jeewon 韩医师 · 皮肤笔记",
+      "doctor": "Kim Jeewon",
       "doctor_title": "HOO韩医院 仁川店 代表院长",
-      "doctor_short": "Kim Jiwon 韩医师",
-      "doctor_alt": "HOO韩医院 仁川店 代表院长 Kim Jiwon",
+      "doctor_short": "Kim Jeewon 韩医师",
+      "doctor_alt": "HOO韩医院 仁川店 代表院长 Kim Jeewon",
       "doctor_url": "/zh/#doctor",
       "nav": [
         [
@@ -524,7 +524,7 @@
           "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=zh"
         ],
         [
-          "有问题？欢迎 Instagram 私信",
+          "把想治疗部位的自拍通过 Instagram 私信发给我们",
           "https://www.instagram.com/hooincheon"
         ],
         [
@@ -574,7 +574,7 @@
         ]
       ],
       "parking_note": "机械式停车场无法停放大型车、大部分进口车和电动车，请改用公共停车场。",
-      "visit_note": "诊疗以韩语进行。如果您更习惯用中文，可以在就诊前通过 Instagram 私信发送问题或照片，就诊当天我们会借助翻译软件逐一为您说明。",
+      "visit_note": "诊疗以韩语进行。就诊前，请先自拍一张想治疗部位的照片带来，也可以连同问题一起通过 Instagram 私信发给我们。就诊当天我们会借助翻译软件逐一为您说明。",
       "live": {
         "days": [
           "周日",
@@ -643,7 +643,7 @@
           "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ja"
         ],
         [
-          "ご質問は Instagram DM へ",
+          "気になる部位のセルフィーを Instagram DM へ",
           "https://www.instagram.com/hooincheon"
         ],
         [
@@ -693,7 +693,7 @@
         ]
       ],
       "parking_note": "機械式のため、大型車・多くの輸入車・電気自動車は駐車できません。公営駐車場をご利用ください。",
-      "visit_note": "診療は韓国語で行います。日本語のほうが安心な方は、ご来院前に Instagram DM でご質問や写真をお送りください。当日は翻訳アプリを使って一つずつご説明します。",
+      "visit_note": "診療は韓国語で行います。ご来院前に、治療を希望する部位をセルフィーで撮ってお持ちください。ご質問と一緒に Instagram DM で送っていただくこともできます。当日は翻訳アプリを使って一つずつご説明します。",
       "live": {
         "days": [
           "日",

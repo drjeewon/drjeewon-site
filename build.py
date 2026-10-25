@@ -28,6 +28,53 @@ PREVIEW = CFG.get("preview", False)  # 도메인 연결 전 임시 주소: 검�
 BASE = re.sub(r"^https?://[^/]+", "", D)  # 예: /drjeewon-site (하위 경로 배포용)
 
 
+# 외국어 페이지: pages/en/, pages/zh/, pages/ja/ 에 두고, 머리말 "ko"에 같은 내용의 한국어 주소를 적는다.
+# 화면 문구(메뉴, 진료 안내, 바닥글 등)는 config.json langs.<언어>가 한국어 기본값을 덮어씀.
+LANGS = CFG.get("langs", {})
+HREFLANG = {"ko": "ko", **{k: v["hreflang"] for k, v in LANGS.items()}}
+ALTS = {}  # 한국어 주소 -> {언어: 그 언어 주소}
+KO_UI = {
+    "html_lang": "ko", "in_language": "ko-KR", "og_locale": "ko_KR", "lang_name": "한국어", "home_url": "/",
+    "site_name": CFG["site_name"], "doctor": CFG["doctor"], "doctor_title": CFG["doctor_title"],
+    "doctor_short": f'{CFG["doctor"]} 한의사', "doctor_alt": f'후한의원 인천점 {CFG["doctor"]} 대표원장',
+    "crumb_home": "홈", "crumb_label": "위치", "nav_cta": "상담 예약",
+    "faq_heading": "자주 묻는 질문", "clinic_heading": "진료 안내",
+    "reviewer_label": "감수 한의사", "updated_label": "최종 수정",
+    "events_label": "관련 시술·이벤트 (후한의원 인천점 홈페이지)", "events_more": "자세히 보기 ›",
+    "btn_booking": "네이버 예약", "btn_tel": f'전화 {C["tel"]}', "btn_tel_short": "전화 문의",
+    "btn_kakao": "카카오톡 상담", "btn_home": f'{C["name"]} 홈페이지', "btn_home_short": "홈페이지",
+    "btn_insta": "인스타그램", "dock_book": "네이버로 진료 예약하기",
+    "f_info": "병원 정보", "f_links": "바로가기", "addr_full": f'{C["region"]} {C["locality"]} {C["street"]}',
+    "f_link_names": ["네이버 예약", "네이버 플레이스", "블로그", "인스타그램", "카카오톡 상담"],
+    "f_tag": "<span>이름부터 정확히 붙이고,</span> <b>다시 올라오는 이유까지 함께.</b>",
+    "f_small": '<a href="/policy/">콘텐츠 작성 원칙</a> · 이 사이트의 글은 일반적인 건강 정보이며 진료를 대신하지 않습니다. 효과는 개인의 상태에 따라 다를 수 있습니다.',
+    "live": None,
+}
+
+
+def ui(m):
+    return {**C, **KO_UI, **LANGS.get(m.get("lang", "ko"), {})}
+
+
+def alts_of(m):
+    """같은 내용의 언어별 주소 {언어: 주소}. 번역이 없으면 빈 dict."""
+    key = m["path"] if m.get("lang", "ko") == "ko" else m.get("ko")
+    return {"ko": key, **ALTS[key]} if key in ALTS else {}
+
+
+def lang_links(m):
+    """메뉴 끝 언어 바꾸기: 같은 글의 번역이 있으면 그 글로, 없으면 그 언어 첫 화면으로."""
+    alts, cur = alts_of(m), m.get("lang", "ko")
+    out = []
+    for lg in ["ko", *LANGS]:
+        if lg == cur:
+            continue
+        u = alts.get(lg) or ("/" if lg == "ko" else LANGS[lg]["home_url"])
+        name = KO_UI["lang_name"] if lg == "ko" else LANGS[lg]["lang_name"]
+        out.append(f'<a class="lang" href="{u}" hreflang="{HREFLANG[lg]}" lang="{HREFLANG[lg]}">{esc(name)}</a>')
+    return f'<span class="langs">{"".join(out)}</span>'
+
+
 def with_base(s):
     return re.sub(r'(href|src)="/(?!/)', lambda m: f'{m.group(1)}="{BASE}/', s) if BASE else s
 
@@ -36,13 +83,14 @@ def esc(s):
     return html.escape(s, quote=True)
 
 
-def read_page(p):
+def read_page(p, lang="ko"):
     src = p.read_text(encoding="utf-8")
     m = re.match(r"<!--meta\s*(\{.*?\})\s*-->\s*", src, re.S)
     if not m:
         raise SystemExit(f"{p.name}: 머리말 없음")
     meta = json.loads(m.group(1))
     meta["body"] = src[m.end():]
+    meta["lang"] = lang
     meta.setdefault("updated", date.today().isoformat())
     meta.setdefault("published", meta["updated"])
     return meta
@@ -243,6 +291,7 @@ def clinic_schema():
         "@type": ["MedicalClinic", "LocalBusiness"],
         "@id": f"{D}/#clinic",
         "name": C["name"],
+        **({"alternateName": [v["name"] for v in LANGS.values() if v.get("name")]} if LANGS else {}),
         "url": C["url"],
         "telephone": C["tel"],
         "address": {
@@ -285,6 +334,7 @@ def doctor_schema():
 
 def page_schema(m):
     url = D + m["path"]
+    t = ui(m)
     graph = [
         {"@type": "WebSite", "@id": f"{D}/#website", "url": D + "/",
          "name": CFG["site_name"], "inLanguage": "ko-KR",
@@ -294,15 +344,15 @@ def page_schema(m):
         doctor_schema(),
         {"@type": "MedicalWebPage" if m.get("medical") else "WebPage",
          "@id": url + "#webpage", "url": url, "name": m["title"],
-         "description": m["description"], "inLanguage": "ko-KR",
+         "description": m["description"], "inLanguage": t["in_language"],
          "isPartOf": {"@id": f"{D}/#website"},
          "datePublished": m["published"], "dateModified": m["updated"],
          **({"primaryImageOfPage": D + m["image"]} if m.get("thumb") else {}),
          **({"reviewedBy": {"@id": f"{D}/#doctor"}, "lastReviewed": m["updated"],
              "author": {"@id": f"{D}/#doctor"}} if m.get("medical") else {})},
     ]
-    crumbs = [("홈", D + "/")] + [(n, D + u) for n, u in m.get("crumbs", [])]
-    if m["path"] != "/":
+    crumbs = [(t["crumb_home"], D + t["home_url"])] + [(n, D + u) for n, u in m.get("crumbs", [])]
+    if m["path"] != t["home_url"]:
         crumbs.append((m.get("short", m["h1"]), url))
         graph.append({"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": n, "item": u}
@@ -324,17 +374,18 @@ def faq_html(m):
     items = "".join(
         f'<details class="faq"><summary><span class="q">Q.</span><span class="qt">{esc(q)}</span></summary><p>{esc(a)}</p></details>'
         for q, a in m.get("faq", []))
-    return f'<section id="faq"><p class="eyebrow">FAQ</p><h2>{esc(m.get("faq_heading", "자주 묻는 질문"))}</h2>{items}</section>'
+    return f'<section id="faq"><p class="eyebrow">FAQ</p><h2>{esc(m.get("faq_heading", ui(m)["faq_heading"]))}</h2>{items}</section>'
 
 
 def reviewer_html(m):
+    t = ui(m)
     return f'''<aside class="reviewer">
-  <img src="/static/doctor.webp" alt="후한의원 인천점 {esc(CFG["doctor"])} 대표원장" width="96" height="96" loading="lazy">
+  <img src="/static/doctor.webp" alt="{esc(t["doctor_alt"])}" width="96" height="96" loading="lazy">
   <div>
-    <p class="label">감수 한의사</p>
-    <p class="name"><a href="/doctor/">{esc(CFG["doctor"])}</a> · {esc(CFG["doctor_title"])}</p>
+    <p class="label">{esc(t["reviewer_label"])}</p>
+    <p class="name"><a href="{t.get("doctor_url", "/doctor/")}">{esc(t["doctor"])}</a> · {esc(t["doctor_title"])}</p>
     {f'<p class="comment">{esc(m["comment"])}</p>' if m.get("comment") else ""}
-    <p class="date">최종 수정 {esc(m["updated"])}</p>
+    <p class="date">{esc(t["updated_label"])} {esc(m["updated"])}</p>
   </div>
 </aside>'''
 
@@ -345,40 +396,44 @@ def events_html(m):
     evs = CFG.get("events", {}).get(m.get("related") or m["path"], [])
     if not evs:
         return ""
-    items = "".join(f'<a class="event" href="{esc(u)}">{esc(n)}<span>자세히 보기 ›</span></a>' for n, u in evs)
-    return f'<div class="events"><p class="label">관련 시술·이벤트 (후한의원 인천점 홈페이지)</p>{items}</div>'
+    t = ui(m)
+    items = "".join(f'<a class="event" href="{esc(u)}">{esc(n)}<span>{esc(t["events_more"])}</span></a>' for n, u in evs)
+    return f'<div class="events"><p class="label">{esc(t["events_label"])}</p>{items}</div>'
 
 
 def clinic_html(m):
     rows = lambda rs: "".join(f'<div class="row"><span>{esc(k)}</span><b>{esc(v)}</b></div>' for k, v in rs)
+    t = ui(m)
     return f'''<section class="clinic" id="clinic">
   <p class="eyebrow">CONTACT</p>
-  <h2>{esc(m.get("clinic_heading", "진료 안내"))}</h2>
+  <h2>{esc(m.get("clinic_heading", t["clinic_heading"]))}</h2>
   {f'<p class="lead">{esc(m["clinic_intro"])}</p>' if m.get("clinic_intro") else ""}
   {events_html(m)}
   <div class="info3">
     <div>
       <p class="k"><b>01</b> ADDRESS</p>
-      <p class="big">{esc(C.get("addr_main", C["street"]))}</p>
-      <p class="sub">{esc(C.get("addr_sub", C["subway"]))}</p>
-      <p class="muted">{esc(C.get("addr_note", ""))}</p>
+      <p class="big">{esc(t.get("addr_main", C["street"]))}</p>
+      <p class="sub">{esc(t.get("addr_sub", C["subway"]))}</p>
+      <p class="muted">{esc(t.get("addr_note", ""))}</p>
     </div>
     <div>
       <p class="k"><b>02</b> HOURS</p>
-      {rows(C.get("hours_rows", []))}
-      <span class="chip">{esc(C.get("closed_text", ""))}</span>
+      {rows(t.get("hours_rows", []))}
+      <span class="chip">{esc(t.get("closed_text", ""))}</span>
     </div>
     <div>
       <p class="k"><b>03</b> PARKING</p>
-      {rows(C.get("parking_rows", []))}
-      <p class="muted">{esc(C.get("parking_note", ""))}</p>
+      {rows(t.get("parking_rows", []))}
+      <p class="muted">{esc(t.get("parking_note", ""))}</p>
     </div>
   </div>
+  {f'<p class="lead">{t["visit_note"]}</p>' if t.get("visit_note") else ""}
   <div class="cta">
-    {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
-    <a class="btn" href="tel:{C["tel"]}">전화 {C["tel"]}</a>
-    <a class="btn" href="{C["kakao"]}">카카오톡 상담</a>
-    <a class="btn" href="{C["url"]}">{esc(C["name"])} 홈페이지</a>
+    {f'<a class="btn primary" href="{esc(t["booking"])}">{esc(t["btn_booking"])}</a>' if t.get("booking") else ""}
+    <a class="btn" href="tel:{C["tel"]}">{esc(t["btn_tel"])}</a>
+    {f'<a class="btn" href="{esc(t["instagram"])}">{esc(t["btn_insta"])}</a>' if t.get("cta_insta") else ""}
+    <a class="btn" href="{C["kakao"]}">{esc(t["btn_kakao"])}</a>
+    <a class="btn" href="{C["url"]}">{esc(t["btn_home"])}</a>
   </div>
 </section>'''
 
@@ -393,14 +448,15 @@ ICONS = {
 
 def dock_html(m):
     """화면 아래 떠 있는 예약 바: 왼쪽은 돌아가는 안내 문구, 오른쪽은 전화·네이버 예약·카카오톡·인스타그램."""
-    msgs = CFG.get("events", {}).get(m.get("related") or m["path"]) or CFG.get("dock", [])
+    t = ui(m)
+    msgs = CFG.get("events", {}).get(m.get("related") or m["path"]) or t.get("dock", CFG.get("dock", []))
     msgs = [[n, u] for n, u in msgs][:8]
-    book = ["네이버로 진료 예약하기", C.get("booking", C["url"])]
+    book = [t["dock_book"], t.get("booking", C["url"])]
     if book[1] not in [u for _, u in msgs]:
         msgs.append(book)  # 이벤트가 있는 페이지도 예약 문구가 한 번은 돌게
     first = msgs[0]
-    links = [("tel", f"tel:{C['tel']}", "전화 문의", "call"), ("naver", C.get("booking"), "네이버 예약", ""),
-             ("kakao", C.get("kakao"), "카카오톡 상담", ""), ("insta", C.get("instagram"), "인스타그램", "")]
+    links = [("tel", f"tel:{C['tel']}", t["btn_tel_short"], "call"), ("naver", t.get("booking"), t["btn_booking"], ""),
+             ("kakao", C.get("kakao"), t["btn_kakao"], ""), ("insta", C.get("instagram"), t["btn_insta"], "")]
     btns = "".join(f'<a class="ic {cls}" href="{esc(u)}" aria-label="{lab}">{ICONS[k]}</a>' for k, u, lab, cls in links if u)
     return (f'<div class="dock" data-msgs=\'{esc(json.dumps(msgs, ensure_ascii=False))}\'>'
             f'<a class="dock-msg" href="{esc(first[1])}"><i></i><span>{esc(first[0])}</span><em>→</em></a>'
@@ -478,6 +534,13 @@ def duo_h1(t):
     return esc(t)
 
 
+def lang_cards_html(m):
+    """외국어 첫 화면의 질환 카드: 같은 언어 페이지 중 머리말에 card가 있는 것."""
+    ms = sorted((x for x in ALL_PAGES if x.get("lang") == m.get("lang") and x.get("lcard")), key=lambda x: x.get("order", 99))
+    return '<div class="cards">' + "".join(
+        f'<div class="card"><h4><a href="{x["path"]}">{esc(x["short"])}</a></h4><p>{esc(x["lcard"])}</p></div>' for x in ms) + "</div>"
+
+
 def render(m):
     body = m["body"]
     body = static_selfcheck(body)
@@ -486,15 +549,17 @@ def render(m):
     body = body.replace("{{CLINIC}}", clinic_html(m)).replace("{{DOMAIN}}", D)
     body = body.replace("{{PROGRAMS}}", PROGRAMS_HTML).replace("{{DISEASES}}", DISEASES_HTML).replace("{{COLUMNS}}", COLUMNS_HTML)
     body = body.replace("{{LATEST}}", LATEST_HTML)
+    body = body.replace("{{LANG_CARDS}}", lang_cards_html(m))
+    t = ui(m)
     url = D + m["path"]
-    nav = "".join(f'<a href="{u}">{esc(n)}</a>' for n, u in NAV)
+    nav = "".join(f'<a href="{u}">{esc(n)}</a>' for n, u in t.get("nav", NAV)) + lang_links(m)
     crumbs = ""
-    if m["path"] != "/":
-        parts = [("홈", "/")] + m.get("crumbs", [])
-        crumbs = '<nav class="crumbs" aria-label="위치">' + " › ".join(
+    if m["path"] != t["home_url"]:
+        parts = [(t["crumb_home"], t["home_url"])] + m.get("crumbs", [])
+        crumbs = f'<nav class="crumbs" aria-label="{esc(t["crumb_label"])}">' + " › ".join(
             f'<a href="{u}">{esc(n)}</a>' for n, u in parts) + f' › <span>{esc(m.get("short", m["h1"]))}</span></nav>'
     og_img = D + m.get("image", "/static/og-v4.jpg")
-    home = m["path"] == "/"
+    home = m["path"] == t["home_url"]
     hero = ""
     if home:
         mm = re.search(r'<p class="answer">(.*?)</p>\s*', body, re.S)
@@ -507,30 +572,36 @@ def render(m):
     <h1 class="duo">{duo_h1(m["h1"])}</h1>
     <p class="lead">{lead}</p>
     <div class="cta">
-      {f'<a class="btn primary" href="{esc(C["booking"])}">네이버 예약</a>' if C.get("booking") else ""}
-      <a class="btn" href="tel:{C["tel"]}">전화 문의</a>
-      <a class="btn" href="{C["kakao"]}">카카오톡 상담</a>
-      <a class="btn" href="{C["url"]}">홈페이지</a>
+      {f'<a class="btn primary" href="{esc(t["booking"])}">{esc(t["btn_booking"])}</a>' if t.get("booking") else ""}
+      <a class="btn" href="tel:{C["tel"]}">{esc(t["btn_tel_short"])}</a>
+      <a class="btn" href="{C["kakao"]}">{esc(t["btn_kakao"])}</a>
+      <a class="btn" href="{C["url"]}">{esc(t["btn_home_short"])}</a>
     </div>
   </div>
 </section>'''
+    alts = alts_of(m)
+    hreflang = "".join(f'<link rel="alternate" hreflang="{HREFLANG[lg]}" href="{D}{u}">\n' for lg, u in alts.items())
+    if alts:
+        hreflang += f'<link rel="alternate" hreflang="x-default" href="{D}{alts["ko"]}">\n'
+    f_links = zip(t["f_link_names"], (t.get("booking"), C.get("place"), C.get("blog"), C.get("instagram"), C.get("kakao")))
+    live_t = f" data-t='{esc(json.dumps(t['live'], ensure_ascii=False))}'" if t.get("live") else ""
     return f'''<!doctype html>
-<html lang="ko">
+<html lang="{t["html_lang"]}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(m["title"])}</title>
 <meta name="description" content="{esc(m["description"])}">
 <link rel="canonical" href="{url}">
-<meta name="robots" content="{"noindex, nofollow" if PREVIEW else ("noindex, follow" if m.get("noindex") else "index, follow, max-image-preview:large")}">
-<meta name="author" content="{esc(CFG["doctor"])}">
+{hreflang}<meta name="robots" content="{"noindex, nofollow" if PREVIEW else ("noindex, follow" if m.get("noindex") else "index, follow, max-image-preview:large")}">
+<meta name="author" content="{esc(t["doctor"])}">
 <meta property="og:type" content="{"article" if m.get("medical") else "website"}">
-<meta property="og:site_name" content="{esc(CFG["site_name"])}">
+<meta property="og:site_name" content="{esc(t["site_name"])}">
 <meta property="og:title" content="{esc(m["title"])}">
 <meta property="og:description" content="{esc(m["description"])}">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{og_img}">
-<meta property="og:locale" content="ko_KR">
+<meta property="og:locale" content="{t["og_locale"]}">
 {"".join(f'<meta name="{k}" content="{esc(v)}">' for k, v in CFG.get("verify", {}).items())}
 <link rel="alternate" type="application/rss+xml" title="{esc(CFG["site_name"])}" href="{D}/rss.xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -547,9 +618,9 @@ def render(m):
 <body>
 <header class="site">
   <div class="bar">
-    <a class="brand" href="/" aria-label="{esc(CFG["site_name"])} 홈"><img src="/static/icon-192.png" alt="" width="40" height="40"><span><strong>{esc(CFG["doctor"])} 한의사</strong><small class="live" data-hours='{esc(json.dumps([[h["days"], h["opens"], h["closes"]] for h in C["hours"]]))}' data-lunch='{esc(json.dumps(C.get("lunch", [])))}'>{esc(CFG["doctor_title"])}</small></span></a>
+    <a class="brand" href="{t["home_url"]}" aria-label="{esc(t["site_name"])} {esc(t["crumb_home"])}"><img src="/static/icon-192.png" alt="" width="40" height="40"><span><strong>{esc(t["doctor_short"])}</strong><small class="live" data-hours='{esc(json.dumps([[h["days"], h["opens"], h["closes"]] for h in C["hours"]]))}' data-lunch='{esc(json.dumps(C.get("lunch", [])))}'{live_t}>{esc(t["doctor_title"])}</small></span></a>
     <nav>{nav}</nav>
-    <a class="nav-cta" href="{esc(C.get("booking", C["url"]))}">상담 예약</a>
+    <a class="nav-cta" href="{esc(t.get("booking", C["url"]))}">{esc(t["nav_cta"])}</a>
   </div>
 </header>
 <main{' class="home"' if home else ""}>
@@ -561,26 +632,26 @@ def render(m):
 </main>
 <footer class="site">
   <div class="wrap f-top">
-    <p class="f-name">{esc(CFG["site_name"])}</p>
-    <p class="f-tag"><span>이름부터 정확히 붙이고,</span> <b>다시 올라오는 이유까지 함께.</b></p>
+    <p class="f-name">{esc(t["site_name"])}</p>
+    <p class="f-tag">{t["f_tag"]}</p>
   </div>
   <div class="wrap f-grid">
     <div class="f-brand">
-      <p>{esc(CFG["doctor_title"])} {esc(CFG["doctor"])}</p>
-      <img class="f-logo" src="/static/hoo-logo-white.webp" alt="{esc(C["name"])}" width="122" height="48" loading="lazy">
+      <p>{esc(t["doctor_title"])} {esc(t["doctor"])}</p>
+      <img class="f-logo" src="/static/hoo-logo-white.webp" alt="{esc(t.get("name", C["name"]))}" width="122" height="48" loading="lazy">
     </div>
     <div>
-      <p class="f-title">병원 정보</p>
-      <p>{esc(C["region"])} {esc(C["locality"])} {esc(C["street"])}</p>
-      <p>{esc(C["hours_text"])}</p>
-      <p><a href="tel:{C["tel"]}">{C["tel"]}</a> · <a href="{C["url"]}">{esc(C["name"])} 홈페이지</a></p>
+      <p class="f-title">{esc(t["f_info"])}</p>
+      <p>{esc(t["addr_full"])}</p>
+      <p>{esc(t["hours_text"])}</p>
+      <p><a href="tel:{C["tel"]}">{C["tel"]}</a> · <a href="{C["url"]}">{esc(t["btn_home"])}</a></p>
     </div>
     <div>
-      <p class="f-title">바로가기</p>
-      <p class="f-links">{"".join(f'<a href="{u}" rel="me">{n}</a>' for n, u in (("네이버 예약", C.get("booking")), ("네이버 플레이스", C.get("place")), ("블로그", C.get("blog")), ("인스타그램", C.get("instagram")), ("카카오톡 상담", C.get("kakao"))) if u)}</p>
+      <p class="f-title">{esc(t["f_links"])}</p>
+      <p class="f-links">{"".join(f'<a href="{u}" rel="me">{esc(n)}</a>' for n, u in f_links if u)}</p>
     </div>
   </div>
-  <p class="small wrap"><a href="/policy/">콘텐츠 작성 원칙</a> · 이 사이트의 글은 일반적인 건강 정보이며 진료를 대신하지 않습니다. 효과는 개인의 상태에 따라 다를 수 있습니다.</p>
+  <p class="small wrap">{t["f_small"]}</p>
 </footer>
 {dock_html(m)}
 <script src="/static/site.js" defer></script>
@@ -590,6 +661,7 @@ def render(m):
 
 
 ALL_COLUMNS = []
+ALL_PAGES = []
 CLINIC_TOPICS = ["여드름", "청소년 여드름", "등드름·몸여드름", "여드름 흉터", "여드름 자국", "기미", "흑자·잡티", "주근깨",
                  "주사피부염·안면홍조", "지루성피부염", "모낭염", "한포진", "한관종", "편평사마귀", "사마귀", "물사마귀", "쥐젖·비립종·검버섯", "모공각화증", "한방 다이어트"]
 
@@ -602,6 +674,14 @@ def main():
     global DISEASES_HTML, COLUMNS_HTML, LATEST_HTML, PROGRAMS_HTML
     pages = [read_page(p) for p in sorted((ROOT / "pages").glob("*.html"))]
     pages += [read_column(p) for p in sorted((ROOT / "columns").glob("*.md")) if not p.name.startswith("_")]
+    for m in pages:
+        m.setdefault("lang", "ko")
+    for lg in LANGS:
+        pages += [read_page(p, lg) for p in sorted((ROOT / "pages" / lg).glob("*.html"))]
+    ALL_PAGES[:] = pages
+    for m in pages:
+        if m["lang"] != "ko" and m.get("ko"):
+            ALTS.setdefault(m["ko"], {})[m["lang"]] = m["path"]
     carded = {m["path"]: m for m in sorted((m for m in pages if m.get("card")), key=lambda m: m.get("order", 99))}
     treat_paths = [u for u in CFG.get("treatments", []) if u in carded]
     groups = [(gid, name, [carded[u] for u in paths if u in carded]) for gid, name, paths in CFG.get("groups", [])]
@@ -670,10 +750,14 @@ def main():
     cols = [m for m in pages if m.get("column")]
     if cols:
         lines += ["", "## 칼럼", ""] + [f"- [{m['h1']}]({D}{m['path']})" for m in cols]
+    for lg, v in LANGS.items():
+        ms = [m for m in pages if m["lang"] == lg]
+        if ms:
+            lines += ["", f"## {v['lang_name']} ({HREFLANG[lg]})", ""] + [f"- [{m['h1']}]({D}{m['path']}): {m['description']}" for m in ms]
     (DIST / "llms.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (DIST / "robots.txt").write_text(f"User-agent: *\n{rules}\n\nSitemap: {D}/sitemap.xml\n", encoding="utf-8")
     items = ""
-    for m in sorted((m for m in pages if m.get("medical")), key=lambda m: m["published"], reverse=True):
+    for m in sorted((m for m in pages if m.get("medical") and m["lang"] == "ko"), key=lambda m: m["published"], reverse=True):
         pub = format_datetime(datetime.fromisoformat(m["published"]).replace(tzinfo=KST))
         items += (f"<item><title>{esc(m['title'])}</title><link>{D}{m['path']}</link>"
                   f"<guid>{D}{m['path']}</guid><description>{esc(m['description'])}</description>"

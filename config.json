@@ -356,5 +356,364 @@
       "DIET",
       "체질과 생활 패턴에 맞춘 다이어트 한약을 함께 찾습니다."
     ]
+  },
+  "langs": {
+    "en": {
+      "hreflang": "en",
+      "html_lang": "en",
+      "in_language": "en",
+      "og_locale": "en_US",
+      "lang_name": "English",
+      "home_url": "/en/",
+      "name": "Hoo Korean Medicine Clinic Incheon",
+      "site_name": "Kim Jeewon, KMD · Skin Notes",
+      "doctor": "Kim Jeewon",
+      "doctor_title": "Director, Hoo Korean Medicine Clinic Incheon",
+      "doctor_short": "Kim Jeewon, KMD",
+      "doctor_alt": "Kim Jeewon, director of Hoo Korean Medicine Clinic Incheon",
+      "doctor_url": "/en/#doctor",
+      "nav": [
+        [
+          "Conditions",
+          "/en/#conditions"
+        ],
+        [
+          "Doctor",
+          "/en/#doctor"
+        ],
+        [
+          "Visit",
+          "/en/#clinic"
+        ]
+      ],
+      "crumb_home": "Home",
+      "crumb_label": "Breadcrumb",
+      "nav_cta": "Book",
+      "faq_heading": "Frequently asked questions",
+      "clinic_heading": "Visit us",
+      "reviewer_label": "Reviewed by",
+      "updated_label": "Last updated",
+      "booking": "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=en",
+      "btn_booking": "Book on Naver",
+      "btn_tel": "Call +82-32-715-8073",
+      "btn_tel_short": "Call",
+      "btn_kakao": "KakaoTalk",
+      "btn_home": "Clinic website (Korean)",
+      "btn_home_short": "Clinic website",
+      "btn_insta": "Instagram",
+      "cta_insta": false,
+      "dock_book": "Book a visit on Naver (English)",
+      "dock": [
+        [
+          "Book a visit on Naver (English)",
+          "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=en"
+        ],
+        [
+          "Bring a selfie of the area you want treated",
+          "/en/#clinic"
+        ],
+        [
+          "Incheon Bus Terminal Station, Exit 2",
+          "/en/#clinic"
+        ]
+      ],
+      "f_info": "Clinic",
+      "f_links": "Links",
+      "addr_full": "3F Manhattan Bldg, 4 Inha-ro 489beon-gil, Namdong-gu, Incheon, South Korea",
+      "hours_text": "Mon, Tue, Thu, Fri 11:00–20:30 (break 14:00–15:30) · Sat 10:00–15:00 · Closed Wed, Sun & public holidays",
+      "f_link_names": [
+        "Naver booking",
+        "Naver Map",
+        "Blog (Korean)",
+        "Instagram",
+        "KakaoTalk"
+      ],
+      "f_tag": "<span>Name it correctly first,</span> <b>then look at why it keeps coming back.</b>",
+      "f_small": "Content on this site is general health information and does not replace a consultation. Results vary from person to person. · <a href=\"/policy/\">Editorial policy (Korean)</a>",
+      "addr_main": "4 Inha-ro 489beon-gil, Namdong-gu, Incheon",
+      "addr_sub": "Manhattan Bldg 3F · Incheon Bus Terminal Station (Incheon Line 1), Exit 2",
+      "addr_note": "Across the street from Lotte Department Store Incheon, in the ABC-MART building to the right of NC New Core Outlet.",
+      "hours_rows": [
+        [
+          "Mon · Tue · Thu · Fri",
+          "11:00 – 20:30"
+        ],
+        [
+          "— Lunch break",
+          "14:00 – 15:30"
+        ],
+        [
+          "Saturday",
+          "10:00 – 15:00"
+        ]
+      ],
+      "closed_text": "Closed Wed, Sun & public holidays",
+      "parking_rows": [
+        [
+          "Building basement (mechanical)",
+          "2 hours covered"
+        ],
+        [
+          "Culture & Arts Center public lot",
+          "2 hours covered"
+        ]
+      ],
+      "parking_note": "The mechanical lot cannot take large cars, most imported cars or EVs. Use the public lot instead.",
+      "visit_note": "Consultations are held in Korean. Before you come, please take a selfie of the area you want treated and show it to the doctor at your visit. We will go through everything with a translation app.",
+      "live": {
+        "days": [
+          "Sun",
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat"
+        ],
+        "off": "{d} · Closed today",
+        "before": "{d} · Opens at {t}",
+        "closed": "{d} · Closed for the day",
+        "lunch": "Lunch break · back at {t}",
+        "open": "Open now · until {t}"
+      }
+    },
+    "zh": {
+      "hreflang": "zh-Hans",
+      "html_lang": "zh-Hans",
+      "in_language": "zh-Hans",
+      "og_locale": "zh_CN",
+      "lang_name": "中文",
+      "home_url": "/zh/",
+      "name": "HOO韩医院 仁川店",
+      "site_name": "Kim Jeewon 韩医师 · 皮肤笔记",
+      "doctor": "Kim Jeewon",
+      "doctor_title": "HOO韩医院 仁川店 代表院长",
+      "doctor_short": "Kim Jeewon 韩医师",
+      "doctor_alt": "HOO韩医院 仁川店 代表院长 Kim Jeewon",
+      "doctor_url": "/zh/#doctor",
+      "nav": [
+        [
+          "皮肤问题",
+          "/zh/#conditions"
+        ],
+        [
+          "院长介绍",
+          "/zh/#doctor"
+        ],
+        [
+          "交通与时间",
+          "/zh/#clinic"
+        ]
+      ],
+      "crumb_home": "首页",
+      "crumb_label": "位置",
+      "nav_cta": "预约",
+      "faq_heading": "常见问题",
+      "clinic_heading": "就诊指南",
+      "reviewer_label": "审核韩医师",
+      "updated_label": "最后更新",
+      "booking": "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=zh",
+      "btn_booking": "Naver 预约",
+      "btn_tel": "电话 +82-32-715-8073",
+      "btn_tel_short": "电话",
+      "btn_kakao": "KakaoTalk 咨询",
+      "btn_home": "医院官网（韩文）",
+      "btn_home_short": "医院官网",
+      "btn_insta": "Instagram",
+      "cta_insta": false,
+      "dock_book": "通过 Naver 预约就诊",
+      "dock": [
+        [
+          "通过 Naver 预约就诊",
+          "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=zh"
+        ],
+        [
+          "就诊时请带上想治疗部位的自拍",
+          "/zh/#clinic"
+        ],
+        [
+          "仁川客运站（仁川1号线）2号出口",
+          "/zh/#clinic"
+        ]
+      ],
+      "f_info": "医院信息",
+      "f_links": "快速链接",
+      "addr_full": "韩国 仁川广域市 南洞区 仁荷路489番街 4 曼哈顿大厦 3层",
+      "hours_text": "周一、二、四、五 11:00–20:30（午休 14:00–15:30）· 周六 10:00–15:00 · 周三、周日及公休日休诊",
+      "f_link_names": [
+        "Naver 预约",
+        "Naver 地图",
+        "博客（韩文）",
+        "Instagram",
+        "KakaoTalk"
+      ],
+      "f_tag": "<span>先准确分辨是什么，</span> <b>再找出反复的原因。</b>",
+      "f_small": "本网站内容为一般健康信息，不能代替诊疗。效果因人而异。 · <a href=\"/policy/\">内容编写原则（韩文）</a>",
+      "addr_main": "仁川 南洞区 仁荷路489番街 4",
+      "addr_sub": "曼哈顿大厦 3层 · 仁川1号线 仁川客运站（Incheon Terminal）2号出口",
+      "addr_note": "在乐天百货仁川店对面，NC New Core 奥特莱斯右侧的 ABC-MART 大楼。",
+      "hours_rows": [
+        [
+          "周一·二·四·五",
+          "11:00 – 20:30"
+        ],
+        [
+          "— 午休",
+          "14:00 – 15:30"
+        ],
+        [
+          "周六",
+          "10:00 – 15:00"
+        ]
+      ],
+      "closed_text": "休诊：周三、周日、公休日",
+      "parking_rows": [
+        [
+          "大楼地下机械式停车场",
+          "提供 2 小时"
+        ],
+        [
+          "文化艺术会馆公共停车场",
+          "提供 2 小时"
+        ]
+      ],
+      "parking_note": "机械式停车场无法停放大型车、大部分进口车和电动车，请改用公共停车场。",
+      "visit_note": "诊疗以韩语进行。就诊前，请先自拍想治疗部位的照片，就诊时给医师看。当天我们会借助翻译软件逐一为您说明。",
+      "live": {
+        "days": [
+          "周日",
+          "周一",
+          "周二",
+          "周三",
+          "周四",
+          "周五",
+          "周六"
+        ],
+        "off": "{d} · 今日休诊",
+        "before": "{d} · {t} 开始诊疗",
+        "closed": "{d} · 今日诊疗已结束",
+        "lunch": "午休中 · {t} 恢复诊疗",
+        "open": "诊疗中 · {t} 结束"
+      }
+    },
+    "ja": {
+      "hreflang": "ja",
+      "html_lang": "ja",
+      "in_language": "ja",
+      "og_locale": "ja_JP",
+      "lang_name": "日本語",
+      "home_url": "/ja/",
+      "name": "HOO韓医院 仁川店",
+      "site_name": "キム・ジウォン韓医師の肌ノート",
+      "doctor": "キム・ジウォン",
+      "doctor_title": "HOO韓医院 仁川店 代表院長",
+      "doctor_short": "キム・ジウォン 韓医師",
+      "doctor_alt": "HOO韓医院 仁川店 代表院長 キム・ジウォン",
+      "doctor_url": "/ja/#doctor",
+      "nav": [
+        [
+          "肌のお悩み",
+          "/ja/#conditions"
+        ],
+        [
+          "院長紹介",
+          "/ja/#doctor"
+        ],
+        [
+          "アクセス",
+          "/ja/#clinic"
+        ]
+      ],
+      "crumb_home": "ホーム",
+      "crumb_label": "現在地",
+      "nav_cta": "予約",
+      "faq_heading": "よくある質問",
+      "clinic_heading": "診療案内",
+      "reviewer_label": "監修 韓医師",
+      "updated_label": "最終更新",
+      "booking": "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ja",
+      "btn_booking": "Naver で予約",
+      "btn_tel": "電話 +82-32-715-8073",
+      "btn_tel_short": "電話",
+      "btn_kakao": "カカオトーク相談",
+      "btn_home": "クリニック公式サイト（韓国語）",
+      "btn_home_short": "公式サイト",
+      "btn_insta": "Instagram",
+      "cta_insta": false,
+      "dock_book": "Naver で診療を予約する",
+      "dock": [
+        [
+          "Naver で診療を予約する",
+          "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ja"
+        ],
+        [
+          "気になる部位のセルフィーを撮ってご来院ください",
+          "/ja/#clinic"
+        ],
+        [
+          "仁川ターミナル駅（仁川1号線）2番出口",
+          "/ja/#clinic"
+        ]
+      ],
+      "f_info": "クリニック情報",
+      "f_links": "リンク",
+      "addr_full": "韓国 仁川広域市 南洞区 仁荷路489番ギル 4 マンハッタンビル 3階",
+      "hours_text": "月・火・木・金 11:00–20:30（昼休み 14:00–15:30）· 土 10:00–15:00 · 水・日・祝日休診",
+      "f_link_names": [
+        "Naver 予約",
+        "Naver マップ",
+        "ブログ（韓国語）",
+        "Instagram",
+        "カカオトーク"
+      ],
+      "f_tag": "<span>まず正しく見分けて、</span> <b>繰り返す理由まで一緒に。</b>",
+      "f_small": "本サイトの内容は一般的な健康情報であり、診療に代わるものではありません。効果には個人差があります。 · <a href=\"/policy/\">コンテンツ作成方針（韓国語）</a>",
+      "addr_main": "仁川 南洞区 仁荷路489番ギル 4",
+      "addr_sub": "マンハッタンビル 3階 · 仁川1号線 仁川ターミナル駅 2番出口",
+      "addr_note": "ロッテ百貨店仁川店の向かい、NCニューコアアウトレットの右隣にある ABC-MART のビルです。",
+      "hours_rows": [
+        [
+          "月・火・木・金",
+          "11:00 – 20:30"
+        ],
+        [
+          "— 昼休み",
+          "14:00 – 15:30"
+        ],
+        [
+          "土曜日",
+          "10:00 – 15:00"
+        ]
+      ],
+      "closed_text": "定休日：水・日・祝日",
+      "parking_rows": [
+        [
+          "ビル地下 機械式駐車場",
+          "2時間サポート"
+        ],
+        [
+          "文化芸術会館 公営駐車場",
+          "2時間サポート"
+        ]
+      ],
+      "parking_note": "機械式のため、大型車・多くの輸入車・電気自動車は駐車できません。公営駐車場をご利用ください。",
+      "visit_note": "診療は韓国語で行います。ご来院前に、治療を希望する部位をセルフィーで撮り、診察のときに医師にお見せください。当日は翻訳アプリを使って一つずつご説明します。",
+      "live": {
+        "days": [
+          "日",
+          "月",
+          "火",
+          "水",
+          "木",
+          "金",
+          "土"
+        ],
+        "off": "{d} · 本日休診",
+        "before": "{d} · {t} 診療開始",
+        "closed": "{d} · 本日の診療は終了",
+        "lunch": "昼休み · {t} 診療再開",
+        "open": "診療中 · {t} まで"
+      }
+    }
   }
 }

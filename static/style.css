@@ -354,3 +354,9 @@ main.home{padding-top:0}
 .hero-soft .cta{justify-content:center}
 @media (max-width:860px){.hero.hero-soft{width:calc(100vw - 20px);border-radius:26px 26px 0 0}.hs-inner{padding:72px 18px 64px}.hero-soft h1{font-size:clamp(1.95rem,8vw,2.4rem)}}
 @media (prefers-color-scheme:dark){.hero.hero-soft{background:linear-gradient(180deg,rgba(15,20,32,.62) 0%,rgba(15,20,32,.78) 55%,var(--bg) 100%),url(/static/img/hero-bg.webp) center 35%/cover no-repeat}}
+
+/* 외국어 페이지: 중국어·일본어는 글자 사이에서 줄을 바꿔야 넘치지 않음 */
+html:lang(zh-Hans) body,html:lang(ja) body{word-break:normal;line-break:strict;font-family:"Pretendard Variable","Pretendard",-apple-system,"PingFang SC","Hiragino Sans","Hiragino Kaku Gothic ProN","Microsoft YaHei","Yu Gothic","Noto Sans CJK SC","Noto Sans CJK JP",system-ui,sans-serif}
+html:lang(en) body{word-break:normal;letter-spacing:0}
+header.site nav a.lang{font-size:14px;color:var(--muted);padding-left:10px;padding-right:10px}
+header.site nav .langs{display:flex;gap:2px;margin-left:6px;padding-left:6px;border-left:1px solid var(--line)}

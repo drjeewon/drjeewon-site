@@ -20,16 +20,21 @@ document.querySelectorAll('.selfcheck').forEach(function (box) {
     var lunch = JSON.parse(el.dataset.lunch || '[]');
     var names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var short = ['일', '월', '화', '수', '목', '금', '토'];
+    // 외국어 페이지는 data-t에 요일과 문구 틀을 넣어 둔다 ({d} 요일, {t} 시각)
+    var T = el.dataset.t ? JSON.parse(el.dataset.t) : null;
+    if (T) short = T.days;
+    var fmt = function (k, ko, d, t) { return T ? T[k].replace('{d}', d).replace('{t}', t) : ko; };
     var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
     var day = now.getDay(), min = now.getHours() * 60 + now.getMinutes();
     var toMin = function (t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; };
     var today = hours.filter(function (h) { return h[0].indexOf(names[day]) >= 0; })[0];
     var text, cls;
-    if (!today) { text = short[day] + ' · 오늘 휴진'; cls = 'off'; }
-    else if (min < toMin(today[1])) { text = short[day] + ' · 진료 전 · ' + today[1] + ' 진료 시작'; cls = 'before'; }
-    else if (min >= toMin(today[2])) { text = short[day] + ' · 진료 마감'; cls = 'off'; }
-    else if (lunch.length && day !== 6 && min >= toMin(lunch[0]) && min < toMin(lunch[1])) { text = '점심시간 · ' + lunch[1] + ' 진료 재개'; cls = 'break'; }
-    else { text = '진료 중 · ' + today[2] + ' 마감'; cls = 'open'; }
+    var d = short[day];
+    if (!today) { text = fmt('off', d + ' · 오늘 휴진', d); cls = 'off'; }
+    else if (min < toMin(today[1])) { text = fmt('before', d + ' · 진료 전 · ' + today[1] + ' 진료 시작', d, today[1]); cls = 'before'; }
+    else if (min >= toMin(today[2])) { text = fmt('closed', d + ' · 진료 마감', d); cls = 'off'; }
+    else if (lunch.length && day !== 6 && min >= toMin(lunch[0]) && min < toMin(lunch[1])) { text = fmt('lunch', '점심시간 · ' + lunch[1] + ' 진료 재개', d, lunch[1]); cls = 'break'; }
+    else { text = fmt('open', '진료 중 · ' + today[2] + ' 마감', d, today[2]); cls = 'open'; }
     el.textContent = text;
     el.classList.add('on', cls);
   } catch (e) {}

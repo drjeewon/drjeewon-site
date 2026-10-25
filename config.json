@@ -396,8 +396,8 @@
       "btn_kakao": "KakaoTalk",
       "btn_home": "Clinic website (Korean)",
       "btn_home_short": "Clinic website",
-      "btn_insta": "Instagram DM",
-      "cta_insta": true,
+      "btn_insta": "Instagram",
+      "cta_insta": false,
       "dock_book": "Book a visit on Naver (English)",
       "dock": [
         [
@@ -405,8 +405,8 @@
           "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=en"
         ],
         [
-          "Send a selfie of your concern by Instagram DM",
-          "https://www.instagram.com/hooincheon"
+          "Bring a selfie of the area you want treated",
+          "/en/#clinic"
         ],
         [
           "Incheon Bus Terminal Station, Exit 2",
@@ -455,7 +455,7 @@
         ]
       ],
       "parking_note": "The mechanical lot cannot take large cars, most imported cars or EVs. Use the public lot instead.",
-      "visit_note": "Consultations are held in Korean. Before you come, please take a selfie of the area you want treated and bring it with you, or send it with your questions by Instagram DM. On the day, we will go through everything with a translation app.",
+      "visit_note": "Consultations are held in Korean. Before you come, please take a selfie of the area you want treated and show it to the doctor at your visit. We will go through everything with a translation app.",
       "live": {
         "days": [
           "Sun",
@@ -515,8 +515,8 @@
       "btn_kakao": "KakaoTalk 咨询",
       "btn_home": "医院官网（韩文）",
       "btn_home_short": "医院官网",
-      "btn_insta": "Instagram 私信",
-      "cta_insta": true,
+      "btn_insta": "Instagram",
+      "cta_insta": false,
       "dock_book": "通过 Naver 预约就诊",
       "dock": [
         [
@@ -524,8 +524,8 @@
           "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=zh"
         ],
         [
-          "把想治疗部位的自拍通过 Instagram 私信发给我们",
-          "https://www.instagram.com/hooincheon"
+          "就诊时请带上想治疗部位的自拍",
+          "/zh/#clinic"
         ],
         [
           "仁川客运站（仁川1号线）2号出口",
@@ -574,7 +574,7 @@
         ]
       ],
       "parking_note": "机械式停车场无法停放大型车、大部分进口车和电动车，请改用公共停车场。",
-      "visit_note": "诊疗以韩语进行。就诊前，请先自拍一张想治疗部位的照片带来，也可以连同问题一起通过 Instagram 私信发给我们。就诊当天我们会借助翻译软件逐一为您说明。",
+      "visit_note": "诊疗以韩语进行。就诊前，请先自拍想治疗部位的照片，就诊时给医师看。当天我们会借助翻译软件逐一为您说明。",
       "live": {
         "days": [
           "周日",
@@ -634,8 +634,8 @@
       "btn_kakao": "カカオトーク相談",
       "btn_home": "クリニック公式サイト（韓国語）",
       "btn_home_short": "公式サイト",
-      "btn_insta": "Instagram DM",
-      "cta_insta": true,
+      "btn_insta": "Instagram",
+      "cta_insta": false,
       "dock_book": "Naver で診療を予約する",
       "dock": [
         [
@@ -643,8 +643,8 @@
           "https://m.booking.naver.com/booking/6/bizes/163438?theme=place&lang=ja"
         ],
         [
-          "気になる部位のセルフィーを Instagram DM へ",
-          "https://www.instagram.com/hooincheon"
+          "気になる部位のセルフィーを撮ってご来院ください",
+          "/ja/#clinic"
         ],
         [
           "仁川ターミナル駅（仁川1号線）2番出口",
@@ -693,7 +693,7 @@
         ]
       ],
       "parking_note": "機械式のため、大型車・多くの輸入車・電気自動車は駐車できません。公営駐車場をご利用ください。",
-      "visit_note": "診療は韓国語で行います。ご来院前に、治療を希望する部位をセルフィーで撮ってお持ちください。ご質問と一緒に Instagram DM で送っていただくこともできます。当日は翻訳アプリを使って一つずつご説明します。",
+      "visit_note": "診療は韓国語で行います。ご来院前に、治療を希望する部位をセルフィーで撮り、診察のときに医師にお見せください。当日は翻訳アプリを使って一つずつご説明します。",
       "live": {
         "days": [
           "日",

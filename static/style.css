@@ -73,7 +73,7 @@ article img{max-width:100%;height:auto;border-radius:var(--r)}
 h3.group{margin:40px 0 14px;font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.02em}
 
 /* 진료 원칙 */
-.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.principles{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:28px}
 .pr{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px 26px;box-shadow:var(--shadow-sm)}
 .pr b{display:block;color:var(--accent);font-size:14px;letter-spacing:.12em}
 .pr h3{margin:.5em 0 .6em;font-size:1.2rem}

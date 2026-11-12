@@ -286,10 +286,14 @@ def make_thumb(lines, out):
     im.save(out, quality=88, optimize=True)
 
 
+# Same @id as the MedicalClinic schema on ic.hooclinic.co.kr, so both sites describe one clinic.
+CLINIC_ID = C["url"].rstrip("/") + "/#clinic"
+
+
 def clinic_schema():
     return {
         "@type": ["MedicalClinic", "LocalBusiness"],
-        "@id": f"{D}/#clinic",
+        "@id": CLINIC_ID,
         "name": C["name"],
         **({"alternateName": [v["name"] for v in LANGS.values() if v.get("name")]} if LANGS else {}),
         "url": C["url"],
@@ -324,7 +328,8 @@ def doctor_schema():
         "name": CFG["doctor"],
         "jobTitle": CFG["doctor_title"],
         "url": f"{D}/doctor/",
-        "worksFor": {"@id": f"{D}/#clinic"},
+        "worksFor": {"@id": CLINIC_ID},
+        **({"sameAs": CFG["doctor_same_as"]} if CFG.get("doctor_same_as") else {}),
         **({"image": D + CFG["doctor_image"]} if CFG.get("doctor_image") else {}),
         **({"memberOf": [{"@type": "Organization", "name": n} for n in CFG["doctor_memberships"]]}
            if CFG.get("doctor_memberships") else {}),
@@ -342,12 +347,13 @@ def page_schema(m):
          "publishingPrinciples": f"{D}/policy/"},
         clinic_schema(),
         doctor_schema(),
-        {"@type": "MedicalWebPage" if m.get("medical") else "WebPage",
+        {"@type": "MedicalWebPage" if m.get("medical") else ("ProfilePage" if m["path"] == "/doctor/" else "WebPage"),
          "@id": url + "#webpage", "url": url, "name": m["title"],
          "description": m["description"], "inLanguage": t["in_language"],
          "isPartOf": {"@id": f"{D}/#website"},
          "datePublished": m["published"], "dateModified": m["updated"],
          **({"primaryImageOfPage": D + m["image"]} if m.get("thumb") else {}),
+         **({"mainEntity": {"@id": f"{D}/#doctor"}} if m["path"] == "/doctor/" else {}),
          **({"reviewedBy": {"@id": f"{D}/#doctor"}, "lastReviewed": m["updated"],
              "author": {"@id": f"{D}/#doctor"}} if m.get("medical") else {})},
     ]

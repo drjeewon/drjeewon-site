@@ -108,6 +108,9 @@ A. 할 수 있습니다. 다만 1~2주 동안은 딱지를 떼지 말고, 목걸
 Q. 겨드랑이나 가슴 밑 쥐젖도 뺄 수 있나요?
 A. 뺄 수 있습니다. 가슴·배·등 같은 몸 부위는 부위 무제한 구성으로 한 번에 정리하기도 합니다. 땀이 많은 자리는 회복 기간에 통풍을 신경 써 주세요.
 
+Q. 요즘 많이 파는 쥐젖 없애는 크림이나 패치는 써도 되나요?
+A. 권하지 않습니다. 미국 식품의약국(FDA)은 점이나 쥐젖을 없애는 용도로 승인한 일반 판매 제품이 없다고 밝히고, 이런 제품이 피부에 상처와 흉터를 남길 수 있으며 스스로 판단해 쓰다가 피부암 진단이 늦어질 수 있다고 경고했습니다. 바른 자리 주변이 붉게 헐거나 쥐젖이 덜 떨어진 채 남는 경우도 있어, 쓰기 전에 무엇인지 먼저 확인받으시는 것이 안전합니다.
+
 Q. 임신 중에 생긴 쥐젖도 지금 빼야 하나요?
 A. 임신 중에 늘어난 쥐젖은 급하게 뺄 필요가 없습니다. 걸려서 불편하지 않다면 출산 뒤에 상태를 보고 정리하셔도 됩니다.
 
@@ -115,3 +118,4 @@ A. 임신 중에 늘어난 쥐젖은 급하게 뺄 필요가 없습니다. 걸�
 
 - [Skin tags - NHS](https://www.nhs.uk/conditions/skin-tags/)
 - [Skin tag - DermNet](https://dermnetnz.org/topics/skin-tag)
+- [Warning Letter to Amazon.com on unapproved mole and skin tag removal products - U.S. FDA, 2022](https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/amazoncom-inc-629452-08042022)
